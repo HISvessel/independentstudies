@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import time
 #Let's now learn code
 
 """Example 1"""
@@ -21,6 +21,8 @@ def verify(index):
         print("Target not found.")
 
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-result = linear_search(numbers, 12)
-
+start = time.time()
+result = linear_search(numbers, 2)
+end = time.time()
 verify(result)
+print(f"This operation took {end - start} time")
