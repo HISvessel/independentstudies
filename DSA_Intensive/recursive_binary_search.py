@@ -19,7 +19,7 @@ def recursive_binary_search(a_list, target):
 def verify_result(result):
     print("Target found:", result)
 
-numbers = [1, 2, 3, 4, 5, 5, 6, 7, 8]
+numbers = [1, 2, 3, 4, 5, 6, 7, 8]
 start = time.time()
 result = recursive_binary_search(numbers, 12)
 end = time.time()
