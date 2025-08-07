@@ -30,6 +30,14 @@ def harder_merge_sort(list1, list2):
 l1 = [1, 2, 4]
 l2 = [1, 3, 4]
 
+first_index = l1[0]
+second_index = l1[1]
+print(f"The list is placed in: {id(l1)}")
+print(f"First index subscript is placed as object in: {id(first_index)}")
+print(f"Second index subscript is placed as object in: {id(second_index)}")
+print(f"Searching by first index subscript: {id(l1[0])}")
+print(f"Searching by second index subscript: {id(l1[1])}")
+
 start = time.time()
 new_list = merge_sort(l1, l2)
 end = time.time()
