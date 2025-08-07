@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import time
+import array
 
 def merge_sort(list1, list2):
     """the function returns a new sorted merged list of both given
@@ -20,8 +21,11 @@ def merge_sort(list1, list2):
     new_list = list1
     return sorted(new_list + list2)
 
-    
-
+def harder_merge_sort(list1, list2):
+    """this function is a harder variant of merge sort, where instead of
+    utilizing the list object in python, we would instead use the array
+    object from the array module."""
+    pass
 
 l1 = [1, 2, 4]
 l2 = [1, 3, 4]
