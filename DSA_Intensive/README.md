@@ -69,5 +69,8 @@ Data structures are structures that contain data in an ordered fashion. Data str
 Lists
 Lists is an object exclusive to Python. it is an array-like object that stores heterogeneous data as well as homogenous data. Lists in Python are mutable, meaning that its original structure can be changed without having to create a duplicate. In order to search for objects inside of a list, we can search by index (list[x] where x is the position located inside of the list), or by iterating through the list(with a for loop or a while loop) and setting conditions to find a specific input or value contained inside of a list. The elements are not stored continguously in memory as it would on an array, instead, a reference is stored to where the ACTUAL data in memory is located. So, if my list is in x place in memory, the content inside of the list is a reference to another place that is not x. That place is where the value given to the data is actually stored.
 
+List methods:
+1) Append: this is a builtin method that adds a value to a give position if input, otherwise, it adds the value to the end. Appending is usually a constant time operation, or O(1). 
+
 Arrays:
 it is a continguous memory block filled with data, that stores data to  block of memory and can be searched by looking for the reference point in memory(a pointer). The compiler chooses the place in memory where it can be stored depending on the size. This means that data is homogenous and that sizes are fixed. 
