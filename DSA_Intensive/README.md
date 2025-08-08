@@ -79,5 +79,7 @@ Linked Lists are linear lists that contains nodes. Nodes are bytes of data that 
 
 Thre are several linked lists: singly linked lists and doubly linked lists. The difference between them is that there are two links in the doubly linked lists now, the first being a reference to the element that comes after it, and a refernece to the element that came before it. With this, we also get an additional quirk for the head and tail nodes: head has a null previous reference, whereas tail has a null next reference. Meaning, that the head can point to the next element, but not the previous one, while tail can point to the previous element, but not the next one.
 
+As for their utility, it appears to be not a whole lot. For learning purposes seems to be a fantastic approach at creating custom data structures and find unique ways of indexing, adding and searching by iteration.
+
 Arrays:
 it is a continguous memory block filled with data, that stores data to  block of memory and can be searched by looking for the reference point in memory(a pointer). The compiler chooses the place in memory where it can be stored depending on the size. This means that data is homogenous and that sizes are fixed. 
