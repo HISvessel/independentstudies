@@ -17,7 +17,7 @@ class Node: #creates a node(singular object) of a Linked List
 class LinkedList:
     """singly linked list"""
     def __init__(self):
-        self.head = None
+        self.head = None #key note here: in a SLL we always point to the head and traverse from that position
     
     def is_empty(self):
         return self.head == None #returns True if it is empty
@@ -58,6 +58,22 @@ class LinkedList:
 
         return "-->".join(nodes)
 
+    def search(self, key):
+        """this function searches the SLL and returns the first
+        node containing the data that matches the key
+        
+        Returns None if it is not found
+        
+        This takes O(n), or linear time"""
+
+        current = self.head
+        while current:
+            if current.data == key:
+                return current
+            else:
+                current = current.next_node
+        return None
+
 #proving node creation was a success
 n1 = Node(10) #does not work
 n2 = Node(20) #does not work
@@ -76,5 +92,7 @@ l1.add(2)
 l1.add(3)
 print(l1.size()) #the current count of our size is 4
 print(l1.head) #this prints the data in the head
+found_node = l1.search(5)
+print(found_node)
 
-print(repr(l1))
+#print(repr(l1)) does not print the linked list. Will be back for more
