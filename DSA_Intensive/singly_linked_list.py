@@ -41,6 +41,18 @@ class LinkedList:
         new_node.next_node = self.head
         self.head = new_node
     
+    def node_at_idex(self, index):
+        if index == 0:
+            return self.head
+
+        else:
+            current = self.head
+            position = 0
+            while (position < index):
+                current = current.next_node
+                position += 1
+            return current
+
     def __repr__(self):
         """we are creating a string representation of our
         linked list. The out put resembles a visual representation
