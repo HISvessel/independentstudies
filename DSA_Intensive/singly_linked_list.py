@@ -104,7 +104,5 @@ l1.add(2)
 l1.add(3)
 print(l1.size()) #the current count of our size is 4
 print(l1.head) #this prints the data in the head
-found_node = l1.search(5)
-print(found_node)
+print(l1)
 
-#print(repr(l1)) does not print the linked list. Will be back for more
