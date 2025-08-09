@@ -6,7 +6,7 @@ import shutil
 folder_path = input("Enter the folder path to organize:")
 
 if not os.path.exists(folder_path):
-    """this handles the edge case for when a relative path
+    """this handles the edge case for when a folder
     is not found"""
 
     print("Relative path does not exists")
@@ -20,7 +20,7 @@ for filename in os.listdir(folder_path):
     if os.path.isdir(file_path):
         continue
 
-    file_ext = filename.split('.')[-1]
+    file_ext = filename.split('.')[-1] #extracts the file path(txt, csv, pdf, etc.)
     ext_folder = os.path.join(folder_path, file_ext)
 
     if not os.path.exists(ext_folder): #this makes the folder extension if it doesnt exists
