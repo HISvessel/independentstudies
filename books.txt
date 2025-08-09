@@ -1,0 +1,77 @@
+1️⃣ Curated Book List
+📌 Foundational Programming & Math
+“Automate the Boring Stuff with Python” – Al Sweigart
+Beginner-friendly Python for real-world tasks.
+
+“Python Crash Course” – Eric Matthes
+Hands-on Python fundamentals + projects.
+
+“Think Python” – Allen B. Downey (free online)
+Deepens understanding of Python and problem-solving.
+
+“Linear Algebra Done Right” – Sheldon Axler
+Excellent for ML math foundations.
+
+“The Elements of Statistical Learning” – Hastie, Tibshirani, Friedman (free PDF)
+For statistical reasoning behind ML.
+
+📌 Data Analysis & Science
+“Python for Data Analysis” – Wes McKinney
+Written by the creator of Pandas; core for data manipulation.
+
+“Practical Statistics for Data Scientists” – Peter Bruce
+Statistics explained for applied ML.
+
+“Storytelling with Data” – Cole Nussbaumer Knaflic
+For turning data into compelling insights.
+
+📌 Machine Learning & Deep Learning
+“Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow” – Aurélien Géron
+Best beginner-friendly practical ML + NN book.
+
+“Deep Learning” – Ian Goodfellow, Yoshua Bengio, Aaron Courville
+The “Bible” for deep learning theory.
+
+“Grokking Deep Learning” – Andrew Trask
+Gentle introduction to NN concepts without heavy math.
+
+📌 Data Engineering & Big Data
+“Designing Data-Intensive Applications” – Martin Kleppmann
+Gold standard for understanding large-scale data systems.
+
+“Streaming Systems” – Tyler Akidau
+Great for real-time data pipelines (Kafka, Flink).
+
+“Data Engineering with Python” – Paul Crickard
+Python-focused ETL and pipeline design.
+
+
+
+2️⃣ Hands-On Mini Projects (for Each Phase)
+📍 Phase 1 – Foundational Programming
+Banking App CLI – Track deposits/withdrawals (Python + file storage).
+
+Text File Search Tool – Build a mini grep in Python.
+
+Guess the Number Game – With random number generation and hints.
+
+📍 Phase 2 – Data Analysis
+Sales Data Dashboard – Use Pandas to process CSV sales data, Matplotlib to plot.
+
+COVID-19 Data Tracker – Fetch API data, clean it, and visualize trends.
+
+Movie Ratings Analyzer – Load datasets like MovieLens, run basic stats.
+
+📍 Phase 3 – ML & Neural Networks
+House Price Predictor – Train regression models on Kaggle’s housing dataset.
+
+Spam Email Classifier – Train Naive Bayes classifier on email dataset.
+
+Handwritten Digit Recognition – Build & train an MNIST neural network.
+
+📍 Phase 4 – Data Engineering
+ETL Pipeline – Pull data from an API, transform it, store it in a database.
+
+Real-Time Tweet Stream – Use Tweepy + Kafka to stream tweets.
+
+Data Warehouse Loader – Build a pipeline to load structured data into PostgreSQL.
