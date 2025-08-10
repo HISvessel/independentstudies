@@ -13,12 +13,18 @@ def load_numbers(file_name): #this function loads our numbers from a text file i
         return numbers
 
 def is_sorted(values):
+    """this function sets the foundation for verifying the numbers on a list
+    the function iterates through the list and compares all values being pointed to
+    and the ones that come next to it. It returns false if the number being pointed to
+    is larger. Otherwise it returns true"""
     for index in range(len(values) - 1):
         if values[index] > values[index + 1]:
             return False
     return True
 
 def bogo_sort(values):
+    """this function randomizes the numbers until the verified condition is met.
+    it will stup randomiing numbers when the numbers are fully sorted"""
     while not is_sorted(values):
         random.shuffle(values)
     return values
