@@ -4,13 +4,21 @@ import sys
 
 
 def selection_sort(values):
-    first = 0
-    sorted_list = []
+    """this function called selection sort was my unique non guided attempt at writing
+    the selection sort algorithm by description alone and not by tutorial. Somehow, I got
+    the function to return the arranged order of the number's indices, but the values are not
+    arranged. The values seem to repeat, for some reason. And I think I know why: 
+    
+    since this attempt did not have any nested loops, we are not iterating through two
+    different values independently, and therefore, we cannot make a comparison between 
+    items iteratively. It looks as though the items are always compared to the index pointed
+    at by the 'first' object down below, hence, not giving us the desired output"""
+    first = 0 #we select the index manually
+    sorted_list = [] #an empty list is created and returned with the sorted values
 
     for value in range(0, len(values)): #we iterate through every elem except the first one
-        print(first)
         if values[value] < values[first]:
-            values[first] = values[value]
+            first = value #switching indeces instead of values
         sorted_list.append(value)
     return sorted_list #returns a list of the position instead of the values
 
