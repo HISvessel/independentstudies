@@ -3,9 +3,12 @@
 
 int main(void)
 {
-    int arr[30];
-    int elem = 30;
+    int num = 0;
+    printf("%d", num);
+    printf("%p", &num);
 
-    arr pop = elem;
+    int number = 17;
+    printf("%d", number);
+    printf("%p", &number);
     return 0;
 }
