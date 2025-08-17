@@ -1,0 +1,1 @@
+This repository is a tool to guide us to a more effective approach towards full stack. Particularly, it is meant to have more development of front end coding projects and scripts.
