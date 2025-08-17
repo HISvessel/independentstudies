@@ -25,6 +25,9 @@ Statistics explained for applied ML.
 “Storytelling with Data” – Cole Nussbaumer Knaflic
 For turning data into compelling insights.
 
+"Introduction to Algorithms" - Thomas H. Cormen
+An introductory book to Algorithms
+
 📌 Machine Learning & Deep Learning
 “Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow” – Aurélien Géron
 Best beginner-friendly practical ML + NN book.
