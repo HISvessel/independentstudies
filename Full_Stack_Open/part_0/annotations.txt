@@ -1,0 +1,81 @@
+Topic: Fundamentals of Web apps
+
+> This part of the curriculum opens by showing a basic application filled with some....questionable
+development practices. It makes for an interest study, since it paves way for we are NOT 
+to create applications, instead opting to teach us the best contemporary practices of 
+today's web apps. 
+
+> And starting now, we can implement rules for how correct development looks like: 
+#1: always keep the development console open on your web browser. Think of this as a 
+rule of thumb; a necessity for developing your product.
+
+HTTP GET
+> As studied previously, the server and the web browser communicate with each other
+using the http(hypertext transfer protocol), a basic exchange of hypermedia between documents;
+more commonly, a documents HTML. In order to check the status and the request/response of a 
+method, we look at the network console setting to read the output provided in the header
+window. Here, we can see some important bits:
+    1) the method type(GET, POST, PUT, DELETE)
+    2) the status code: approved as a 200 code and rejected as a 400, for example
+    3) the response tab: it shows response data, like a regular html page, the body
+    section to display the structure of the html, among other things
+    4) the content-type: this portion displays the form in which a data is to be output after 
+    recieving the request; for example, a content type: image/png would indicate 
+    that the object recieved by te request is an image. The same could also be said 
+    about the content of a writing, if a utf-8 is recieved, for instance. 
+
+
+Traditional Web applications
+> The approach show here seems to follow more traditional methods for old school
+PHP and JavaScript, We can send a static HTMl document, and likewise the server can 
+make dynamic formation of the HTML. The way its done, however, is by inserting a whole 
+structure in the form of a dictionary. So, instead of creating the HTML separately, 
+a JavaScript function creates the entire structure and sends it as a response to the 
+GET request when the homepage is requested. The reason this seemed to have been done is due to the 
+nature of the browser's 'intelligence'. It was not considered very smart, and only fetched the 
+HTML data from the server, and all app logic is server side. 
+
+Loading a page containing JavaScript
+> The browser fetches the html code defining the content and the structure of the page from 
+the server using an http GET request.
+
+> Links in the html code cause the browser to also fetch the CSS and the JavaScript
+in the main.css and the main.js files contained as part of the HTML scripts
+
+> As a result, the browser executes the JavaScript code; it makes a HTTP GET
+request to the page address which returns the notes inserted as JSON data(JavaScript Object Notation)
+
+> When the data has been fetched, the browser executes an event handler, which renders the
+notes to the page using DOM-API. 
+
+Forms and HTTP POST
+> This example also gives us an example of how a post request to the http is performed. 
+This website has a link that directs us to a list of notes added by the user, and at the bottom,
+there is a window to add a new note. After submitting it, five http requests are made:
+    1) the form event: submitting the note as a POST method.
+    2) the loading of the page with a GET method to the HTTP.
+    3) the loading of the style sheet
+    4) the loading of the JavaScript files
+    5) the data located in the data.json files
+
+> So, as we see, when POST methods are requested, these get compounded over every other
+method since, because we are submitting information and redirecting back to the top of the
+page. So the chain of events add the post, and upon clicking the submit button, we trigger
+the same chain of events to load the page and all the styles, scripts and data as the json.
+
+AJAX
+> Stand for Asynchronous JavaScript and XML, was created in 2005 and pertains to a
+new revolutionary approach that enabled the fetching of content to webpages using JS included
+within the html, without the need to re render the page.
+
+Web forms
+> web forms are one of the main points of interaction between the user and the website. 
+Web forms allows the user to enter data that can get sent to a web server for processing
+and storage. It can also be used to change client side interface, such as what was done
+before, where the note page can take an input and store it as the element of a list to be 
+displayed as part of the page. 
+
+> A web forms html is made up of one or more form controls(also called widgets), 
+often referred to it as an HTML form. These can have single or multi line text fields
+dropdown boxes, buttons, checkboxes, or radio buttons, and are mostly creayed using the 
+<input> tag, also others such as button, box, etc.
