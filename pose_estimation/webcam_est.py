@@ -7,7 +7,10 @@ import cv2
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
 # Open webcam
-cap = cv2.VideoCapture(0)
+# the webcam is tied to a telephone via DroidCam
+#vchanges are pending, so that a phone will not be used for the final
+# project
+cap = cv2.VideoCapture("http://192.168.0.15:4747/video")
 
 while True:
     ret, frame = cap.read()  # Capture frame
