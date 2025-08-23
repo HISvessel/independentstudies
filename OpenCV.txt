@@ -51,3 +51,14 @@ The functions that we can use here are cv2.rectangle, cv2.circle, cv2.putText
 
 5) Output. the final part of the process, generally involves to either display or save.
 Done with cv2.imshow and cv2.imwrite
+
+
+🔹 Thought process for OpenCV scripts
+
+Whenever you approach OpenCV, ask yourself:
+
+What’s my source? (camera, image, video file, generated frame)
+What operation am I applying? (filter, detection, transformation, analysis)
+Do I need to display or save results? (cv2.imshow for display, cv2.imwrite / cv2.VideoWriter for saving)
+
+That structure makes your scripts modular.
