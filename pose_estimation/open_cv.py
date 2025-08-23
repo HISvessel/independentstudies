@@ -8,7 +8,7 @@ overlays, amongst other things."""
 
 import cv2
 
-cap = cv2.videocapture(0) #opens the webcam
+cap = cv2.VideoCapture(0) #opens the webcam
 while True: #while the webcam is open
     ret, frame = cap.read() #reading of frames on an open camera
     if not ret:

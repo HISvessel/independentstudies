@@ -18,7 +18,7 @@ cv2.imshow(window, image) -> Displays an image on a window
 
 cv2.imwrite(path, image) -> saves an image
 
-cv2.VIdeoCapture(index or path) -> Access to camera or Video
+cv2.VideoCapture(index or path) -> Access to camera or Video
 
 cv2.cvtColor(image, code) -> Convert color space
 
