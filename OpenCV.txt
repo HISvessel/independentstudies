@@ -1,0 +1,53 @@
+This document is a light reading of the OpenCV documentation found online. The idea of this document
+is to study and master the concept of OpenCV, one of the primary cruxes of the project coming up.
+
+
+OpenCV, or open source computer vision library, is a library for processing of images and videos. it is written
+in C/C++, making it fast and lightweight with proper binding to Python language. It processes images and videos by:
+1) read
+2) transforming
+3) detecting
+4) tracking
+5) recognizing
+amongst others. 
+
+Functions and buitins:
+cv2.imread(path, flags) -> loads an image
+
+cv2.imshow(window, image) -> Displays an image on a window
+
+cv2.imwrite(path, image) -> saves an image
+
+cv2.VIdeoCapture(index or path) -> Access to camera or Video
+
+cv2.cvtColor(image, code) -> Convert color space
+
+cv2.resize(image, dsize) -> Resizing
+
+cv2.GaussianBlur(image, (k, k), sigma) -> Blur
+
+cv2.Canny(image, threshold1, threshold2) -> edge detection
+
+cv2.HoughCircles(...) -> detect circles
+
+cv2.CascadeClassifier(xml).detectMultiscale(img) -> detect faces/objects using Haar cascades
+
+
+Though process for scripting with OpenCV:
+it would be best to think in image-processing pipelines:
+1) Take an input. STart a process by capturing a new video with cv2.VideoCapture or by loading
+an image to read with cv2.imread()
+
+2) Pre processing. we can process images or video captures. This is the time to think about the scope
+of the image in question, and think about resizing, grayscale, noise reduction, etc. We can accomplish some of these with
+cv2.GaussianBlur for altering blur of images and cv2.cvtColor to determine the colors to capture.
+
+3) Feature Extraction. this is the setting of aesthetics for the image or video captures, such a edges, corners
+contours, faces, etc. We can get these done by use of the Canny, HoughCircles, findcontours, and CascadeClassifier
+functions.
+
+4) Post processing. You can draw results, crop regions and combine with other logics, such as ML/MediaPipe
+The functions that we can use here are cv2.rectangle, cv2.circle, cv2.putText
+
+5) Output. the final part of the process, generally involves to either display or save.
+Done with cv2.imshow and cv2.imwrite
