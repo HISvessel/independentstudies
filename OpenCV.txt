@@ -9,8 +9,37 @@ in C/C++, making it fast and lightweight with proper binding to Python language.
     3) detecting
     4) tracking
     5) recognizing
+To unpack the process of processing images, we have to think about how computer vision works. In
+its simplest form, images are percieved by digital devices as numerical values for each point in the image.
+These are generally called pixels, which are represented as number values, and are generated and processed in 
+matrices, or multidimensional arrays. Well, this module allows us to process and manipulate the numbers
+stored within the matrices(eg. the pixels). 
 
-B) 
+
+B) Getting Started
+Images: we can start with simple images, by reading displaying and writing it to a file. 
+In order to read the photo, we can access it with cv2.imread() along with the existing image filename. 
+We can protect the system protocol by putting a condition to exit if
+the file is not found. Next, after reading the image, we display with cv2.imshow(). Finally, we
+save the contents of the photo with cv2.imwrite() as a new image file. We can trigger a save
+by mapping save with cv.waitKey(0)[to perform a process until a key is pressed] and ord('s'). ***NOTE: ord() reads the ASCii value of the letter
+printed, which can help us prompt an action when pressing the computer key correspondent with the
+ASCii letter. 
+
+    import cv2 as cv
+    import sys
+ 
+    img = cv.imread(cv.samples.findFile("starry_night.jpg"))
+ 
+    if img is None:
+        sys.exit("Could not read the image.")
+ 
+    cv.imshow("Display window", img)
+    k = cv.waitKey(0)
+ 
+    if k == ord("s"):
+        cv.imwrite("starry_night.png", img)
+B.1) 
 
 C) Functions and buitins:
 cv2.imread(path, flags) -> loads an image
