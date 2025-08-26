@@ -1,0 +1,1 @@
+Welcome to OpenCV. For sake of the tutorial, stick to the documentation for reference and read the appended txt in the current path of the repository to better understand what OpenCV is, how it works, how it is built and what the necessary functions, builtins and complements are. 
