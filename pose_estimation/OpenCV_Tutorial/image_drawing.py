@@ -14,6 +14,7 @@ we can load into the OpenCV module to display and save."""
 
 import cv2 as cv
 import numpy as np
+import os
 
 #Lets start with a demo: draw a line inside of a black image
 img = np.zeros((512, 512, 3), np.uint8)#an image made as an array of zeros of the given size
@@ -24,6 +25,11 @@ cv.line(img, (0,0), (511, 511), (255,0,0), 5)
 #we can now show the image
 cv.imshow("Thick blue line", img)
 key = cv.waitKey(0)
+
+#protects the os from creating duplicate files of our generated picture
+
 if key == ord("s"):
+    if os.path.exists("single-line-jpg"):
+        print("Image already exists")
     cv.imwrite("single-line.jpg", img) #write the photo file into the system
 cv.destroyAllWindows()
