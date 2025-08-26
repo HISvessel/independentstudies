@@ -10,7 +10,7 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_fronta
 # the webcam is tied to a telephone via DroidCam
 #vchanges are pending, so that a phone will not be used for the final
 # project
-cap = cv2.VideoCapture("http://192.168.0.15:4747/video")
+cap = cv2.VideoCapture("http://192.168.9.177:4747/video")
 #cap = cv2.VideoCapture(0) #this would change dependin on the situation
 while True:
     ret, frame = cap.read()  # Capture frame
