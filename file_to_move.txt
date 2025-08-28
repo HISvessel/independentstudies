@@ -1,0 +1,3 @@
+I want to move this file from here unto independentStudies
+
+moving of file successful. finally understood how files are organized at root
