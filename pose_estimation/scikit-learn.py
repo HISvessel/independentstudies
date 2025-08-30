@@ -16,4 +16,7 @@ clf = RandomForestClassifier(random_state=0)
 clf.fit(X, y)
 
 # Predict on new angle
+for member in X:
+    if member < 90:
+        print("Bend your elbows more")
 print("Form is good?" , clf.predict([[89]])[0])
