@@ -71,6 +71,26 @@ cv2.HoughCircles(...) -> detect circles
 
 cv2.CascadeClassifier(xml).detectMultiscale(img) -> detect faces/objects using Haar cascades
 
+C1) Trained models:
+These trained models can be utilized with the CascadeClassifier()
+Some of the more common ones include:
+
+Haar Cascades:
+    haarcascade_frontalface_default.xml
+    haarcascade_frontalface_alt.xml
+    haarcascade_frontalface_alt2.xml
+    haarcascade_profileface.xml
+    haarcascade_eye.xml
+    haarcascade_eye_tree_eyeglasses.xml
+    haarcascade_smile.xml
+    haarcascade_fullbody.xml
+    haarcascade_upperbody.xml
+    haarcascade_lowerbody.xml
+
+LBP Cascades (faster, less accurate):
+    lbpcascade_frontalface.xml
+    lbpcascade_profileface.xml
+    lbpcascade_silverware.xml (yep, forks and spoons)
 
 D) Though process for scripting with OpenCV:
 it would be best to think in image-processing pipelines:
