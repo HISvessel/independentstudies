@@ -8,7 +8,7 @@ overlays, amongst other things."""
 
 import cv2
 
-cap = cv2.VideoCapture(0) #opens the webcam
+cap = cv2.VideoCapture('http://192.168.0.15:4747/video') #opens the webcam
 while True: #while the webcam is open
     ret, frame = cap.read() #reading of frames on an open camera
     if not ret:
@@ -16,7 +16,7 @@ while True: #while the webcam is open
     
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
     cv2.imshow('Gray Camera Feed', gray)
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # Quit on 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):  # Quit on 'q' keyboard input
         break
 
 cap.release()
