@@ -31,12 +31,12 @@ import numpy as np
  
 #  Global Variables
  
-DELAY_CAPTION = 1500
-DELAY_BLUR = 100
-MAX_KERNEL_LENGTH = 31
+DELAY_CAPTION = 1500 #what is this number? this will delay caption by 1.5 second, perhaps?
+DELAY_BLUR = 100 #what is this number? this will delay the blur by .1 second, perhaps?
+MAX_KERNEL_LENGTH = 31 #what is this number?
  
-src = None
-dst = None
+src = None #indicates file source, None if it does not exist
+dst = None #recieves the source file for filtering, None if src is None
 window_name = 'Smoothing Demo'
  
  
@@ -65,7 +65,6 @@ def main(argv):
     if display_caption('Homogeneous Blur') != 0:
         return 0
  
-    
     for i in range(1, MAX_KERNEL_LENGTH, 2):
         dst = cv.blur(src, (i, i))
         if display_dst(DELAY_BLUR) != 0:
