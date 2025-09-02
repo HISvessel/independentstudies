@@ -41,7 +41,7 @@ ASCii letter.
         cv.imwrite("starry_night.png", img)
 B.1) 
 
-C) Functions and buitins:
+C) Functions and builtins:
 cv2.imread(path, flags) -> loads an image
 
 cv2.imshow(window, image) -> Displays an image on a window
@@ -57,7 +57,7 @@ on the computer to access a camera for video processes.
 
 > As an alternative, we can get a webcam for testing our first minimum product. Likewise
 we can test with an iPhone using a USB to Lightning and using libimobiledevice tools to
-talk to iPhones. 
+talk to iPhones.
 
 cv2.cvtColor(image, code) -> Convert color space
 
