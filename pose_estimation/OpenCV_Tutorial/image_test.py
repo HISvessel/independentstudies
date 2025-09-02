@@ -20,8 +20,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray, 100, 200)
 #Resizing an image
 #we resize the image by dimension in height and width(remember HTML) and basedon coordinates
-if cv2.waitKey(1) & 0xFF == ord("r"):
-    cv2.resize(img, (0, 0), fx=0.5, fy=0.5)
+
 
 # Show results
 cv2.imshow("Original", img) #image show(imshow) takes two parameters
