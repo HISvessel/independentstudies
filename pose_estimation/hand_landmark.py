@@ -2,7 +2,7 @@
 movement trackning using mediapipe"""
 
 import cv2
-import mediapipe as mp
+import pose_estimation.mp_intro as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from mediapipe.framework.formats import landmark_pb2

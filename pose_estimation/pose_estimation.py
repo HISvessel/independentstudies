@@ -5,8 +5,6 @@ many tests."""
 
 import cv2
 import mediapipe as mp
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
 
 # Initialize MediaPipe Pose model
 mp_pose = mp.solutions.pose
