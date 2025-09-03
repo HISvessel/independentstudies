@@ -30,8 +30,9 @@ while cap.isOpened():
     if results.pose_landmarks:
         mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
+    rotated_frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
     # Display the output
-    cv2.imshow("Pose Estimation", frame)
+    cv2.imshow("Pose Estimation", rotated_frame)
 
     # Exit on pressing 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):

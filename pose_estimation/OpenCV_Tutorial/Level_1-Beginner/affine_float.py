@@ -2,11 +2,12 @@ import cv2 as cv
 import numpy as np
 import os
 
-single_line_img = "single-line.jpg"
-if not os.path.exists(single_line_img):
+
+lena_img = "lena.jpg"
+if not os.path.exists(lena_img):
     raise FileNotFoundError("Incorrect path")
 
-img = cv.imread(single_line_img)
+img = cv.imread(lena_img)
 pts1 = np.float32([[50, 50], [200, 50], [50, 200]])
 pts2 = np.float32([[10, 100], [200, 50], [100, 250]])
 
