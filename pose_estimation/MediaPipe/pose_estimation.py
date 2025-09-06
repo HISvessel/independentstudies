@@ -13,7 +13,7 @@ mp_drawing = mp.solutions.drawing_utils
 
 # Start webcam
 #Camera taken from iPhone sharing the same WiFi port as laptop
-cap = cv2.VideoCapture("http://192.168.9.176:4747/video")
+cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
     ret, frame = cap.read()
