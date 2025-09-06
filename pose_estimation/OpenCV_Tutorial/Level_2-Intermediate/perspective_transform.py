@@ -10,7 +10,12 @@ M = cv.getPerspectiveTransform(pts1, pts2)
 dst = cv.warpPerspective(img, M, (300, 300))
 
 cv.imshow('original', img)
-cv.imshow('warped img', dst)
+while True:
+    key = cv.waitKey(0) & 0XFF
+    if key == ord('w'):
+        cv.imshow('warped img', dst)
+    
+    elif key == ord('q'):
+        break
 
-cv.waitKey(0)
 cv.destroyAllWindows()
