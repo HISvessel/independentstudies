@@ -42,11 +42,12 @@ ASCii letter.
 B.1) 
 
 C) Functions and builtins:
-cv2.imread(path, flags) -> loads an image
-
+cv2.imread(path, flags) -> loads an image as a matrix object(in c++) or as a NumPy array(Python)
+this loaded image can be read with imshow and imwrite.
 cv2.imshow(window, image) -> Displays an image on a window
 
-cv2.imwrite(path, image) -> saves an image
+cv2.imwrite(path, image) -> saves an image. Image file is written as a matrix object 
+with pixels as its contents, and is saved on the same path as the script is contained.
 
 cv2.VideoCapture(index or path) -> Access to camera or video
 >access must be made through a valid port with external resources or by use of 
@@ -63,11 +64,20 @@ cv2.cvtColor(image, code) -> Convert color space
 
 cv2.resize(image, dsize) -> Resizing
 
-cv2.GaussianBlur(image, (k, k), sigma) -> Blur
+cv2.GaussianBlur(image, (k, k), sigma) -> Blurring of images, reduces high frequency detauls
+(noise, sharp edges) by averaging pixel values with their neighbours.
+To reduce these details, a matrix(known also as a kernel) is slid over an image and reduces
+the pixels based on the kernel distribution. In the case of the GaussianBlur, the Gaussian distribution,
+or bell curve, is taken into consideration. Edges are better preserved with Gaussian blurs than
+on regular ones. 
 
 cv2.Canny(image, threshold1, threshold2) -> edge detection
 
 cv2.HoughCircles(...) -> detect circles
+
+cv2.filter2D(source, default value, kernel) -> this makes edges and details more prominent.
+> We create a custom kernel that emphasizes the difference between a pixel and its neighbor.
+Negative weights subtract blurred surroundings, positive weights amplify the center pixel. 
 
 cv2.CascadeClassifier(xml).detectMultiscale(img) -> detect faces/objects using Haar cascades
 
