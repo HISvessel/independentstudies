@@ -81,6 +81,12 @@ Negative weights subtract blurred surroundings, positive weights amplify the cen
 
 cv2.CascadeClassifier(xml).detectMultiscale(img) -> detect faces/objects using Haar cascades
 
+cv2.equalizeHist() -> this is used for the dilation and erosion of images, or the redistribution
+of brightness values, thereby improving image contrast. Nromally. pixel intensities might cluster around a 
+narrow range(for example, mostly dark pixels). Histpgram equialization stretcehs this distribution across the full
+uint8(0-255) values. This makes bright areas brighter, dark areas darker, and makes clearer contrasts between
+these spots.
+
 C1) Trained models:
 These trained models can be utilized with the CascadeClassifier()
 Some of the more common ones include:
