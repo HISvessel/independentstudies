@@ -5,6 +5,9 @@ many tests."""
 
 import cv2
 import mediapipe as mp
+import socket
+
+s = socket.socket()
 
 # Initialize MediaPipe Pose model
 mp_pose = mp.solutions.pose
@@ -13,7 +16,10 @@ mp_drawing = mp.solutions.drawing_utils
 
 # Start webcam
 #Camera taken from iPhone sharing the same WiFi port as laptop
-cap = cv2.VideoCapture('http://192.168.0.15:4747/video')
+cap = cv2.VideoCapture(0)
+
+if not cap.isOpened():
+    print('Cannot open camera. It has not been accessed.')
 
 while cap.isOpened():
     ret, frame = cap.read()
