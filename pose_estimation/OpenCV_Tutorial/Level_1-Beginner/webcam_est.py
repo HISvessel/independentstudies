@@ -10,7 +10,7 @@ face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 profile_cascade = cv2.CascadeClassifier(CASCADE_PROFILE)
 
 # Open webcam
-cap = cv2.VideoCapture("http://192.168.9.176:4747/video") #set to WiFI IP address
+cap = cv2.VideoCapture("http://192.168.0.15:4747/video") #set to WiFI IP address
 while True:
     ret, frame = cap.read()  # Capture frame
     if not ret:
