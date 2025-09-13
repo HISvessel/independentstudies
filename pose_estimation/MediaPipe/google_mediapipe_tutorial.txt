@@ -1,0 +1,70 @@
+What is Google's MediaPipe?
+-> It is a C++ created pipeline library
+
+What are Solutions?
+-> they are Ready-made TensorFlow examples, which are grapgs with pre-made tensor TensorFlow
+Lite models and visualization.
+
+Pipelines:
+-> a low level object required for flow-based programming, alngoside other elements
+like Dataflow
+
+Pipelines are:
+a sequence of operations that are chained together to process data. Every chain of operations
+transforms or computates the data through each passing stage.
+
+Data packets run through the Pipeline
+Nodes run on many CPU threads in parallel
+Buffers between nodes are usually required
+For real-time, flow control is necessary.
+For non real-time, deterministic execution, no packet loss
+Designing a pipeline from scratch is HARD
+Standard libraries for pipelines: GStreamer, DeepStream
+
+Library summary(what it is used for and its quirks)
+-> the MediaPipe library is used for audio and video conversion, primarily and usually for 
+Deep Learning. It was written in C++ and it is not very heavily supported or documented, with only
+a handful of docstrings in code, and limited in its A/V codecs(OpenCV and FFMPEG are the only known supported one).
+-> In terms of buffering and flow control, it enables flow control by hand and has unlimited buffering by default, meaning
+that:
+    1)
+    2)
+    3)
+
+MediaPipe's process:
+-> it utilizes five different concepts working together:
+    1) packets - the basic data flow unit, consisting of numeric timestamps and
+    shared pointer to an inmutable payload(). This payload can be of any C++ type, which 
+    also refer to the type of the packet. Packets are value classes and can be copied, with
+    each copy sharing its ownership of the payload.
+    2) graphs - all MP processing takes place inside of a grah, which defines packet 
+    flow paths between nodes. A graph cannn have any number of inputs and outputs, and 
+    data dlow can branch and merge. Thid data typically flows forwards, but it can also 
+    flow backwards.  
+    3) nodes - these produce or consume packets, the workload of the graphs operation. They 
+    are also known as calculators. Each node's interface defines a number of input and outputs
+    ports, indentified by a tag and/or an index. 
+    4) streams - this is a connection between two nodes that carries a sequence of packets,
+    whose timestamos must be monotonically increasing. 
+    5) calculators - a registered class for creating nodes.
+
+
+The weird side of MediaPipe:
+-> to understand MP better, learn Bazel(multi language building system Google uses), Protobuf. 
+-> there is not much in the way of liberty, apparently. Google enforces the use of Bazel and Protobuf.
+-> Dependencies for this project are limited to OpenCV libraries for using it, instead of building from source, 
+which apparently takes forever. 
+-> EVen in Python, this is pretty much a repository sourced and built on Bazel.
+-> BUilding our own MP calculators is possible, but they will have to be built in Bazel
+
+ProtoBuf:
+-> ProtoBuf, or Protocol Buffers, gives us the ability to define data structures in a .protoo file.
+This compiles into a class for our native Python language(same for C++, Java). This documents serializes
+into a binary or text format object, and protobuf is exclusive to its own protobuf classes(no other class types 
+can be serialized by Protobuf). 
+-> Protobuf is used for data serialization, config files, with the goal of replacing JSON, XML, 
+YAML, TML files and objects. These are used heavily in TensorFlow(as binary pb files) and MediaPipe(graphs in text)
+
+FLowLimiter:
+-> A utility tooll contained in mediapipe with the purpose of limiting stream input
+upon the queue. Prevents stack overflow errors by limiting the buffer size.
