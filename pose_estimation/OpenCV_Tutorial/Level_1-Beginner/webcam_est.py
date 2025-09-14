@@ -2,6 +2,7 @@
 a practical example to apply. This module intends to employ webcam face detection."""
 
 import cv2
+from datetime import datetime
 
 # Load pre-trained face detector
 CASCADE_PATH = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
@@ -9,8 +10,9 @@ CASCADE_PROFILE = cv2.data.haarcascades + "haarcascade_profileface.xml"
 face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 profile_cascade = cv2.CascadeClassifier(CASCADE_PROFILE)
 
+print(f'Preparing process at: {datetime.now()}')
 # Open webcam
-cap = cv2.VideoCapture("http://192.168.0.15:4747/video") #set to WiFI IP address
+cap = cv2.VideoCapture("http://192.168.0.3:4747/video") #set to WiFI IP address
 while True:
     ret, frame = cap.read()  # Capture frame
     if not ret:
@@ -32,6 +34,7 @@ while True:
     cv2.imshow("Webcam Face Detection", frame)
     # Break on 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        print(f'Timestamping exit at: {datetime.now()}')
         break
 
 cap.release()
