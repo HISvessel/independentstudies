@@ -87,6 +87,11 @@ narrow range(for example, mostly dark pixels). Histpgram equialization stretcehs
 uint8(0-255) values. This makes bright areas brighter, dark areas darker, and makes clearer contrasts between
 these spots.
 
+cv2.goodFeaturesToTrack() -> uses a Shi Tomasi corner detection module for finding corners in an image
+The image is converted to grayscale since it processes corner pixels better due to higher intensity
+
+cv2.ORB_create() -> creates orbs for object and corner detection
+
 C1) Trained models:
 These trained models can be utilized with the CascadeClassifier()
 Some of the more common ones include:
