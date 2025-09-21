@@ -1,7 +1,7 @@
 import cv2
 
 
-cap = cv2.VideoCapture('http://192.168.9.175:4747/video')
+cap = cv2.VideoCapture('http://192.168.0.29:4747/video')
 while True:
     success, frame = cap.read()
     if not success:
@@ -15,6 +15,8 @@ while True:
     mirrored_frames = cv2.flip(rotated_keyframes, 1)
     cv2.imshow('Video Window with orbs', mirrored_frames)
     key = cv2.waitKey(1)
+    if key & 0XFF == ord('s'):
+        cv2.imwrite('test_save.jpg', mirrored_frames)
     if key & 0XFF == ord('q'):
         print('Finishing process')
         break
