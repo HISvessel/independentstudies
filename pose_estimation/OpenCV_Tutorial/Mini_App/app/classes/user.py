@@ -1,4 +1,4 @@
-from classes.base_class import BaseClass
+from app.classes.base_class import BaseClass
 
 """this script contains a user class. While no attempt to login
 or logout will be added, the goal is to use this user class to create
