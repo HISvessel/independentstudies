@@ -11,6 +11,7 @@ class User(BaseClass):
         self.last_name = last_name
         self.height = height
         self.weight = weight
+        self.videos = []
 
     def validate_method(self):
         status = []
@@ -34,5 +35,6 @@ class User(BaseClass):
             "first name": self.first_name,
             "last name": self.last_name,
             "height": self.height,
-            "weight": self.weight
+            "weight": self.weight,
+            'videos': self.videos
         }
