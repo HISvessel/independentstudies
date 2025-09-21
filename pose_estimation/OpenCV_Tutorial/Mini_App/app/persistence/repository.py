@@ -1,0 +1,1 @@
+"""adding the data persistence memory for image storing"""

@@ -1,0 +1,1 @@
+"""this is the file for memory persistence and structure"""
