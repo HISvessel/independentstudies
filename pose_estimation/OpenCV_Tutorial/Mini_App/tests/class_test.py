@@ -1,1 +1,0 @@
-"""this script contains unit tests of all class methods"""

@@ -1,5 +1,5 @@
-from classes.video_source import VideoSource
-from classes.user import User
+from app.classes.video_source import VideoSource
+from app.classes.user import User
 import cv2 as cv
 from datetime import datetime
 
@@ -9,7 +9,7 @@ of a camera feed so that images can be taken and videos recorded.
 the camera is passed as an API method fed to the HTML
 """
 
-class Camera(VideoSource, User):
+class Camera(User):
     def __init__(self):
         source = [0, 1, 2, 'http://192.168.0.3:4747/video']
         picture_button = cv.imwrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.jpg')
@@ -18,7 +18,7 @@ class Camera(VideoSource, User):
 
     def video_camera(self):
         """helper function to open the camera feed"""
-        capture = cv.VideoCapture(self.source[3])
+        capture = cv.VideoCapture('http://192.168.0.3:4747/video')
         return capture
 
 
@@ -39,10 +39,9 @@ class Camera(VideoSource, User):
             return cv.imshow('Online camera', camera_feed)
 
 
-    async def take_picture(self, image):
+    def take_picture(self, image):
         """this function should allow the user to take a picture based on the
         current operating camera feed"""
-        await image = self.show_screen()
         name = super().first_name
         return cv.imwrite(f'{name}_{datetime.now()}.jpg', image)
 
