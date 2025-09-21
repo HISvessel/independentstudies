@@ -10,15 +10,15 @@ the camera is passed as an API method fed to the HTML
 """
 
 class Camera(User):
-    def __init__(self):
-        source = [0, 1, 2, 'http://192.168.0.3:4747/video']
-        picture_button = cv.imwrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.jpg')
-        record_button = cv.VideoWrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.mp4')
+    def __init__(self, source):
+        self.source = source
+    #    picture_button = cv.imwrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.jpg')
+    #    record_button = cv.VideoWrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.mp4')
 
 
     def video_camera(self):
         """helper function to open the camera feed"""
-        capture = cv.VideoCapture('http://192.168.0.3:4747/video')
+        capture = cv.VideoCapture(self.source)
         return capture
 
 
@@ -36,7 +36,8 @@ class Camera(User):
             if not success:
                 print('Unable to display camera screen')
                 break
-            return cv.imshow('Online camera', camera_feed)
+            cv.imshow('Online camera', camera_feed)
+        self.release_window()
 
 
     def take_picture(self, image):
@@ -61,6 +62,7 @@ class Camera(User):
         try:
             camera = self.video_camera()
             camera.release()
+            cv.destroyAllWindows()
         except:
             if camera.isOpened() == False:
                 print('Cannot close camera, it was never opened')
