@@ -12,10 +12,13 @@ profile_cascade = cv2.CascadeClassifier(CASCADE_PROFILE)
 
 print(f'Preparing process at: {datetime.now()}')
 # Open webcam
-cap = cv2.VideoCapture("http://192.168.9.175:4747/video") #set to WiFI IP address
+cap = cv2.VideoCapture('http://192.168.0.3:4747/video') #set to WiFI IP address
+
+
 while True:
     ret, frame = cap.read()  # Capture frame
     if not ret:
+        print('Could not find source. Finishing process.')
         break
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
@@ -35,7 +38,6 @@ while True:
     # Break on 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         print(f'Timestamping exit at: {datetime.now()}')
-        break
-
+        exit()
 cap.release()
 cv2.destroyAllWindows()
