@@ -5,10 +5,12 @@ or logout will be added, the goal is to use this user class to create
 a video and append it to the user on the database schema"""
 
 class User(BaseClass):
-    def __init__(self, first_name='', last_name='', height=0.0, weight=0):
+    def __init__(self, first_name='', last_name='', password='', email='', height=0.0, weight=0):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
+        self.email = email
+        self.password = password
         self.height = height
         self.weight = weight
         self.videos = []
@@ -29,8 +31,16 @@ class User(BaseClass):
             status.append('Please provide a measurable weight.')
 
         return status
+    
+    def hash_password(self):
+        pass
+
+    def email_form(self):
+        pass
 
     def to_dict(self):
+        """returns the dictionary form for loading and unloading
+        of user object."""
         return {
             "first name": self.first_name,
             "last name": self.last_name,
