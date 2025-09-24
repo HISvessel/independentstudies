@@ -15,3 +15,12 @@ def run_user_tests():
     print(fourth_user.to_dict())
 
 run_user_tests()
+
+def run_class_camera():
+    print('Displaying camera class and its methods')
+    cam = Camera(0)
+    print(dir(cam))
+    print('Displaying class methods na ddictionary annotatino')
+    print('Test complete.')
+
+run_class_camera()

@@ -8,7 +8,7 @@ overlays, amongst other things."""
 
 import cv2
 
-cap = cv2.VideoCapture('http://192.168.0.15:4747/video') #opens the webcam
+cap = cv2.VideoCapture('http://192.168.0.3:4747/video') #opens the webcam
 while True: #while the webcam is open
     ret, frame = cap.read() #reading of frames on an open camera
     if not ret:

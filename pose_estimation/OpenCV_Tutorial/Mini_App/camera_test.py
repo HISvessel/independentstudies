@@ -14,8 +14,8 @@ while True:
     print('Step 3: Displaying captured frames in window')
     cam.display_window(frames)
     print('Step 4: closing window. Awaiting input....')
-    cam.exit_key()
-    print('Ending loop')
-    break
+    if cam.exit_key() & 0XFF == ord('q'):
+        print('Ending loop')
+        break
 cam.release_window(capture)
 print('Window closed gracefully. Testing complete')

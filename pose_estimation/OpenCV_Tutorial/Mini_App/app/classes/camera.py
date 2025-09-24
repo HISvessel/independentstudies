@@ -23,8 +23,6 @@ class Camera(User):
         3. a prerecorded .mp4 video"""
 
         self.source = source
-    #    picture_button = cv.imwrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.jpg')
-    #    record_button = cv.VideoWrite(f'{super().first_name}_{super().last_name}_{datetime.now()}.mp4')
 
 
     def video_camera(self):
@@ -41,15 +39,8 @@ class Camera(User):
         To separate concerns, a different function will be created to
         release the window and close the camera feed."""
 
-        #frame = self.video_camera()
-        #while frame.isOpened():
-        #success, camera_feed = True
         return frame.read()
-        #if not success:
-        #    print('Unable to display camera screen')
-        #    break
-            #cv.imshow('Online camera', camera_feed)
-        #self.release_window()
+
 
     def display_window(self, feed):
         """this is a function to display a window.
@@ -88,18 +79,17 @@ class Camera(User):
         current time it was filmed at."""
         pass
 
-    def exit_key(self):
+    def exit_key(self, delay=1):
         """Helper function to prepare the exit key.
 
         Activated with an event listener on front end JavaScript."""
-        return cv.waitKey(0)
+        return cv.waitKey(delay)
 
 
     def release_window(self, capture):
         """this is a helper function to release the camera window and destroy all
         opened windows, ensuring a success return status of the camera object and closing
         of the camera feed process."""
-            #camera = self.video_camera()
         capture.release()
         cv.destroyAllWindows()
 
