@@ -33,7 +33,7 @@ class Camera(User):
         return capture
 
 
-    def capture_frames(self, frame):
+    def capture_frames(self, frame): #removed self for a quick test
         """this function captures the ongoing frames with cv2.read()
 
         Create a loop that runs while the video_camera() object is opened.
@@ -41,17 +41,21 @@ class Camera(User):
         To separate concerns, a different function will be created to
         release the window and close the camera feed."""
 
-        frame = self.video_camera()
-        while frame.isOpened():
-            success, camera_feed = frame.read()
-            if not success:
-                print('Unable to display camera screen')
-                break
+        #frame = self.video_camera()
+        #while frame.isOpened():
+        #success, camera_feed = True
+        return frame.read()
+        #if not success:
+        #    print('Unable to display camera screen')
+        #    break
             #cv.imshow('Online camera', camera_feed)
-        self.release_window()
+        #self.release_window()
 
     def display_window(self, feed):
-        """this is a function to display a window
+        """this is a function to display a window.
+
+        The function takes the following argument:
+        1. The frames of a cv2.VideoCapture().read() object
 
         WARNING: must be used with capture.isOpened() through a while loop"""
         return cv.imshow('Live feed', feed)
@@ -84,18 +88,20 @@ class Camera(User):
         current time it was filmed at."""
         pass
 
+    def exit_key(self):
+        """Helper function to prepare the exit key.
+
+        Activated with an event listener on front end JavaScript."""
+        return cv.waitKey(0)
+
 
     def release_window(self, capture):
         """this is a helper function to release the camera window and destroy all
         opened windows, ensuring a success return status of the camera object and closing
         of the camera feed process."""
-        try:
             #camera = self.video_camera()
-            capture.release()
-            cv.destroyAllWindows()
-        except:
-            if capture.isOpened() == False:
-                print('Cannot close camera, it was never opened')
+        capture.release()
+        cv.destroyAllWindows()
 
 
     def to_dict(self):
