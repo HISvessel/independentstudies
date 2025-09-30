@@ -7,7 +7,7 @@ import logging
 
 
 camera_blueprint = Blueprint('camera', __name__)
-camera = CameraThreaded('http://192.168.9.175:4747/video').start()
+camera = CameraThreaded('http://192.168.9.175:4747/video')
 logger = logging.getLogger(__name__)
 
 
