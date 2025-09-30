@@ -2,7 +2,7 @@ from app.classes.camera import Camera
 import cv2
 
 
-cam = Camera('http://192.168.0.9:4747/video')
+cam = Camera(source='http://192.168.0.9:4747/video')
 print('Beginning test for camera object')
 capture = cam.video_camera()
 while True:

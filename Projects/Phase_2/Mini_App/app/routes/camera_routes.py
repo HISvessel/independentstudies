@@ -7,7 +7,7 @@ import logging
 
 
 camera_blueprint = Blueprint('camera', __name__)
-camera = CameraThreaded('http://192.168.9.175:4747/video')
+#camera = CameraThreaded('http://192.168.9.175:4747/video')
 logger = logging.getLogger(__name__)
 
 
@@ -18,6 +18,7 @@ def index():
 
 @camera_blueprint.route('/video_feed')
 def video_feed():
+    camera = CameraThreaded('http://192.168.9.175:4747/video')
     logger.info('Client requesting camera service')
     try:
         def generate():
@@ -30,6 +31,10 @@ def video_feed():
     except Exception as e:
         logger.error(f'Service could not be provided: {e}', exc_info=True)
         return {"Error": str(e)}, 500
+
+@camera_blueprint.route('/video_release')
+def free_video_feed():
+    pass
 
 
 @camera_blueprint.route('/snapshot')
