@@ -16,7 +16,7 @@ mp_drawing = mp.solutions.drawing_utils
 
 # Start webcam
 #Camera taken from iPhone sharing the same WiFi port as laptop
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('http://192.168.9.175:4747/video')
 
 if not cap.isOpened():
     print('Cannot open camera. It has not been accessed.')
