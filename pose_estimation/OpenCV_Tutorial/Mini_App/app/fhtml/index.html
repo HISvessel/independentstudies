@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Camera</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 2rem;
+      background: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #controls {
+      margin-top: 2rem;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #startCamera {
+      background: #007BFF;
+      color: white;
+    }
+    #startCamera:hover {
+      background: #0056b3;
+    }
+
+    #takePicture {
+      background: #28a745;
+      color: white;
+    }
+    #takePicture:hover {
+      background: #1e7e34;
+    }
+
+    #recordVideo {
+      width: 60px;
+      height: 60px;
+      background: black;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    #cameraFeed {
+      margin-top: 2rem;
+      display: none; /* hidden until camera starts */
+    }
+
+    #cameraFeed img {
+      max-width: 640px;
+      border: 2px solid #333;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to your new digital camera!</h1>
+
+  <div id="controls">
+    <button id="startCamera">Turn On Camera</button>
+    <button id="takePicture">Take Picture</button>
+    <button id="recordVideo"></button>
+  </div>
+
+  <div id="cameraFeed">
+    <img id="videoStream" src="" alt="Camera Feed">
+  </div>
+
+  <script>
+    const startCameraBtn = document.getElementById('startCamera');
+    const takePictureBtn = document.getElementById('takePicture');
+    const recordBtn = document.getElementById('recordVideo');
+    const cameraFeed = document.getElementById('cameraFeed');
+    const videoStream = document.getElementById('videoStream');
+
+    let isRecording = false;
+
+    // Start camera
+    startCameraBtn.addEventListener('click', () => {
+      cameraFeed.style.display = "block";
+      // Will point to Flask endpoint later
+      videoStream.src = "/video_feed";
+    });
+
+    // Take picture
+    takePictureBtn.addEventListener('click', () => {
+      fetch("/snapshot")
+        .then(res => res.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "snapshot.jpg";
+          a.click();
+        })
+        .catch(err => console.error("Snapshot error:", err));
+    });
+
+    // Record video button toggle (placeholder behavior for now)
+    recordBtn.addEventListener('click', () => {
+      isRecording = !isRecording;
+      if (isRecording) {
+        recordBtn.style.background = "red";
+        // Later: call /start_record endpoint
+      } else {
+        recordBtn.style.background = "black";
+        // Later: call /stop_record endpoint
+      }
+    });
+  </script>
+</body>
+</html>
