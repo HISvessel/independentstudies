@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__, template_folder='fhtml')
     app.register_blueprint(camera_blueprint)
     #basic configuration for message logs
-    logging.basicconfig(
+    logging.basicConfig(
         level=logging.DEBUG,
         format='%(asctime)S [%(levelname)S] $(message)S'
     )
