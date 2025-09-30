@@ -6,7 +6,7 @@ import io
 
 
 camera_blueprint = Blueprint('camera', __name__)
-camera = CameraThreaded('http://192.168.0.3:4747/video')
+camera = CameraThreaded('http://192.168.9.175:4747/video')
 
 @camera_blueprint.route('/')
 def index():
