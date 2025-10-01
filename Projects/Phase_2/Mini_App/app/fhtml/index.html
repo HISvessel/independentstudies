@@ -95,7 +95,7 @@
       cameraFeed.style.display = "block";
       if (!socket) {
         //connects to the server if socket is not null
-        socket = io('http://127.0.0.1:5000');
+        socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
 
         socket.on("frame", (data) => {
           videoStream.src= 'data:imae/jpeg;base64,' + data;
