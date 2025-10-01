@@ -34,7 +34,8 @@ def index():
 def video_feed(socketio):
     #takes frames as encoded inputs
     
-    camera = CameraThreaded(source='http://192.168.0.9:4747/video')
+    # camera = CameraThreaded(source='http://192.168.0.9:4747/video')
+    camera = CameraThreaded(source=1)
     open_counter = 0
     print(f'Running the is Opened clause {open_counter + 1}. Outcome: {camera.capture.isOpened()}.')
     open_counter += 1
