@@ -25,7 +25,8 @@ class CameraThreaded(User):
         while self.running:
             success, frame = self.capture.read()
             if success and frame is not None:
-                self.frame = frame
+                #print('success. Frames are not none')
+                #self.frame = frame
                 self._frame_count += 1
             else:
                 print('Frame read failed. Failed at class level.')
@@ -51,6 +52,7 @@ class CameraThreaded(User):
         if not success:
             print('Could not encode frames. Failed at class level.')
             return None
+        print('Encoding complete. Class success.')
         return buffer.tobytes()
 
     def take_picture(self):
