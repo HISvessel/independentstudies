@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Camera</title>
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
@@ -90,21 +91,21 @@
     const videoStream = document.getElementById('videoStream');
 
     let isRecording = false;
-    let socket = null;
+    //let socket = null;
 
     // Start camera
     startCameraBtn.addEventListener('click', () => {
       cameraFeed.style.display = "block";
-      if (!socket) {
+      //if (!socket) {
         //connects to the server if socket is not null
-        socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
-
+        //socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
+        socket = io()
         socket.on("frame", (data) => {
           videoStream.src = 'data:image/jpeg;base64,' + data;
         });
-
+        console.log(`WebSocket source: ${videoStream.src}`)
         console.log('Camera started via WebSocket');
-      }
+      //}
     });
 
     // Take picture
