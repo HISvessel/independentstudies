@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Digital Camera</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -98,7 +100,7 @@
         socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
 
         socket.on("frame", (data) => {
-          videoStream.src= 'data:imae/jpeg;base64,' + data;
+          videoStream.src= 'data:image/jpeg;base64,' + data;
         });
 
         console.log('Camera started via WebSocket');
