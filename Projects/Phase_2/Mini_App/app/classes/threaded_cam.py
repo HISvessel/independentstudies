@@ -24,9 +24,11 @@ class CameraThreaded(User):
     def update(self):
         while self.running:
             success, frame = self.capture.read()
-            if success:
+            if success and frame is not None:
                 self.frame = frame
                 self._frame_count += 1
+            else:
+                print('Frame read failed. Failed at class level.')
 
                 #update FPS every second
                 now = time.time()
@@ -42,11 +44,13 @@ class CameraThreaded(User):
     def get_encoded_frame(self):
         """Return frame as JPEG bytes for API use"""
         if self.frame is None:
+            print('No frame available yet...')
             return None
         success, buffer = cv.imencode('.jpg', self.frame)
         if not success:
+            print('Could not encode frames. Failed at class level.')
             return None
-        return buffer#.tobytes()
+        return buffer.tobytes()
 
     def take_picture(self):
         if self.frame is not None:

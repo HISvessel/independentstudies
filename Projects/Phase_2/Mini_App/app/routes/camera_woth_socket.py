@@ -1,8 +1,11 @@
 import base64
 from flask import render_template, Blueprint
 from flask_socketio import SocketIO
+from app.classes.camera import Camera
+import cv2 as cv
 from app.classes.threaded_cam import CameraThreaded
 from threading import Lock
+import eventlet
 
 
 
@@ -26,20 +29,20 @@ def index():
 #    with thread_lock:
 #        if thread is None:
 #           thread = socketio.start_background_task(target=video_feed, socketio=socketio)
-@live_feed_bp.route('/')
+
 #the issue lies here: this function is not being threaded to the socket
 def video_feed(socketio):
     #takes frames as encoded inputs
+    
     camera = CameraThreaded(source='http://192.168.0.9:4747/video')
     while True: #and camera.running:
         frames = camera.get_encoded_frame()
         if frames is None:
-            print("Failure capturing frames for encoding.")
-            continue
-        print(f'Captured frame of size: {len(frames)} bytes.')
+            print("Failure capturing frames for encoding. Failed at video feed.")
+            break
         JPGs = base64.b64encode(frames).decode('utf-8')
         socketio.emit('frame', JPGs)
-        print(f'Emitted a frame of length {len(JPGs)}, ready for front end.')
+        eventlet.sleep(0.1)
 
 #@live_feed_bp.route('/')
 #def index():
