@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__, template_folder='fhtml')
     app.config['SECRET_KEY'] = 'secret!'
     socketio = SocketIO()
-    socketio.init_app(app)
+    socketio.init_app(app) #prepare to erase this if necessary
     #app.register_blueprint(camera_blueprint)
     app.register_blueprint(live_feed_bp)
     
