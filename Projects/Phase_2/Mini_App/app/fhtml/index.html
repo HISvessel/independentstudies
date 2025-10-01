@@ -88,12 +88,21 @@
     const videoStream = document.getElementById('videoStream');
 
     let isRecording = false;
+    let socket = null;
 
     // Start camera
     startCameraBtn.addEventListener('click', () => {
       cameraFeed.style.display = "block";
-      // Will point to Flask endpoint later
-        videoStream.src = "http://127.0.0.1:5000/live_feed";
+      if (!socket) {
+        //connects to the server if socket is not null
+        socket = io('http://127.0.0.1:5000');
+
+        socket.on("frame", (data) => {
+          videoStream.src= 'data:imae/jpeg;base64,' + data;
+        });
+
+        console.log('Camera started via WebSocket');
+      }
     });
 
     // Take picture
