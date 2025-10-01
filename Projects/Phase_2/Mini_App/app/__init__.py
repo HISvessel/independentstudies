@@ -18,6 +18,6 @@ def create_app():
     app.register_blueprint(live_feed_bp)
     
     cam = CameraThreaded(source='http://192.168.0.9:4747/video')
-    init_camera_feed(cam, socketio)
+    #init_camera_feed(cam, socketio)
 
-    return app, socketio, cam
+    return app, socketio
