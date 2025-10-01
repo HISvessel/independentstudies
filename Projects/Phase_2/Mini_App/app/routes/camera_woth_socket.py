@@ -25,7 +25,7 @@ def init_camera_feed(cam_instance, socketio):
 
 def video_feed(socketio):
     #takes frames as encoded inputs
-    while camera and camera.running:
+    while camera: #and camera.running:
         frames = camera.get_encoded_frame()
         if frames is None:
             print("Failure capturing frames for encoding.")

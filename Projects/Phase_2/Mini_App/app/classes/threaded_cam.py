@@ -46,7 +46,7 @@ class CameraThreaded(User):
         success, buffer = cv.imencode('.jpg', self.frame)
         if not success:
             return None
-        return buffer.tobytes()
+        return buffer#.tobytes()
 
     def take_picture(self):
         if self.frame is not None:
