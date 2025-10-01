@@ -29,6 +29,7 @@ def video_feed(socketio):
         frames = camera.get_encoded_frame()
         if frames is None:
             print("Failure capturing frames for encoding.")
+            continue
         JPGs = base64.b64encode(frames).decode('utf-8')
         socketio.emit('frame', JPGs)
         print('Emitted a frame, ready for front end.')
