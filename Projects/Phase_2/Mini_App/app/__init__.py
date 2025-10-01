@@ -1,25 +1,21 @@
 """this script runs the application"""
 from flask import Flask
-#from app.routes.camera_routes import camera_blueprint
-import logging
+from flask_socketio import SocketIO
+from app.classes.threaded_cam import CameraThreaded
+from app.routes.camera_woth_socket import init_camera_feed
 
 
 def create_app():
-    from app.routes.camera_routes import camera_blueprint
+    #from app.routes.camera_routes import camera_blueprint
+    from app.routes.camera_woth_socket import live_feed_bp
 
     app = Flask(__name__, template_folder='fhtml')
-    app.register_blueprint(camera_blueprint)
-    #basic configuration for message logs
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s [%(levelname)s] %(message)s'
-    )
-    logger = logging.getLogger(__name__)
+    app.config['SECRET_KEY'] = 'secret!'
+    socketio = SocketIO(app)
+    #app.register_blueprint(camera_blueprint)
+    app.register_blueprint(live_feed_bp)
+    
+    cam = CameraThreaded(source='http://192.168.0.9:4747/video')
+    init_camera_feed(cam)
 
-    #logging error handling exceptions
-    @app.errorhandler(Exception)
-    def handle_exception(e):
-        logger.error(f'Unhandled eception: {e}', exc_info=True)
-        return {"Error": str(e)}, 500
-
-    return app
+    return app, socketio, cam

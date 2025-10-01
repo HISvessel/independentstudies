@@ -93,7 +93,7 @@
     startCameraBtn.addEventListener('click', () => {
       cameraFeed.style.display = "block";
       // Will point to Flask endpoint later
-        videoStream.src = "/video_feed";
+        videoStream.src = "http://127.0.0.1:5000/live_feed";
     });
 
     // Take picture
