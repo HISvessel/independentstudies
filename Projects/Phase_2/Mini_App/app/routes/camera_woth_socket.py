@@ -26,7 +26,8 @@ def index():
 #    with thread_lock:
 #        if thread is None:
 #           thread = socketio.start_background_task(target=video_feed, socketio=socketio)
-
+@live_feed_bp.route('/')
+#the issue lies here: this function is not being threaded to the socket
 def video_feed(socketio):
     #takes frames as encoded inputs
     camera = CameraThreaded(source='http://192.168.0.9:4747/video')
@@ -35,9 +36,10 @@ def video_feed(socketio):
         if frames is None:
             print("Failure capturing frames for encoding.")
             continue
+        print(f'Captured frame of size: {len(frames)} bytes.')
         JPGs = base64.b64encode(frames).decode('utf-8')
         socketio.emit('frame', JPGs)
-        print('Emitted a frame, ready for front end.')
+        print(f'Emitted a frame of length {len(JPGs)}, ready for front end.')
 
 #@live_feed_bp.route('/')
 #def index():

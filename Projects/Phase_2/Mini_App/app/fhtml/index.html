@@ -103,8 +103,9 @@
         socket.on("frame", (data) => {
           videoStream.src = 'data:image/jpeg;base64,' + data;
         });
+        console.log(`Recieved frames of ${data.length} size.`)
         console.log(`WebSocket source: ${videoStream.src}`)
-        console.log('Camera started via WebSocket');
+        console.log('Camera started via WebSocket.');
       //}
     });
 

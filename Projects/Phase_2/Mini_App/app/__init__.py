@@ -17,6 +17,8 @@ def create_app():
     #app.register_blueprint(camera_blueprint)
     app.register_blueprint(live_feed_bp)
     
+    #the issue lies here: the camera is starting from here
+    #and not from the video feed function.
     cam = CameraThreaded(source='http://192.168.0.9:4747/video')
     #init_camera_feed(cam, socketio)
 
