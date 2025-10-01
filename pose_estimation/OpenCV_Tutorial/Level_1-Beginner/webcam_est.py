@@ -12,7 +12,7 @@ profile_cascade = cv2.CascadeClassifier(CASCADE_PROFILE)
 
 print(f'Preparing process at: {datetime.now()}')
 # Open webcam
-cap = cv2.VideoCapture('http://192.168.0.3:4747/video') #set to WiFI IP address
+cap = cv2.VideoCapture('http://192.168.0.9:4747/video') #set to WiFI IP address
 
 
 while True:

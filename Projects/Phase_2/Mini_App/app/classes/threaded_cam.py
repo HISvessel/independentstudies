@@ -29,6 +29,7 @@ class CameraThreaded(User):
                 self._frame_count += 1
             else:
                 print('Frame read failed. Failed at class level.')
+                break
 
                 #update FPS every second
                 now = time.time()
