@@ -12,7 +12,7 @@ def create_app():
     #basic configuration for message logs
     logging.basicConfig(
         level=logging.DEBUG,
-        format='%(asctime)S [%(levelname)S] $(message)S'
+        format='%(asctime)s [%(levelname)s] %(message)s'
     )
     logger = logging.getLogger(__name__)
 
