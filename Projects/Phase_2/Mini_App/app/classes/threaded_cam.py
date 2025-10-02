@@ -26,11 +26,11 @@ class CameraThreaded(User):
             success, frame = self.capture.read()
             if success and frame is not None:
                 #print('success. Frames are not none')
-                #self.frame = frame
+                self.frame = frame
                 self._frame_count += 1
             else:
                 print('Frame read failed. Failed at class level.')
-                break
+                time.sleep(0.1)
 
                 #update FPS every second
                 now = time.time()

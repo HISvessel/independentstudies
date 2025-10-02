@@ -1,5 +1,6 @@
 import cv2 as cv
-import eventlet
+# import eventlet
+import time
 import base64
 from flask import Flask, render_template
 from flask_socketio import SocketIO
@@ -35,7 +36,7 @@ def capture_image():
         socketio.emit('frames', JPGs)
 
         #sleeping to allow for other tasks
-        eventlet.sleep(0.1)
+        time.sleep(0.01)
     #releases capture once process is done
     cap.release()
 

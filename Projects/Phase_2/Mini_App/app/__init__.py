@@ -16,7 +16,7 @@ def create_app():
     socketio.init_app(app) #prepare to erase this if necessary
     #app.register_blueprint(camera_blueprint)
     app.register_blueprint(live_feed_bp)
-    video_feed(socketio)
+    # video_feed(socketio)
     #eventlet.sleep(0.1) #testing concurrency here.
 
     #the issue lies here: the camera is starting from here

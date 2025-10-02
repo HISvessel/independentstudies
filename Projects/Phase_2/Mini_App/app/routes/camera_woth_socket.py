@@ -5,7 +5,8 @@ from app.classes.camera import Camera
 import cv2 as cv
 from app.classes.threaded_cam import CameraThreaded
 from threading import Lock
-import eventlet
+# import eventlet
+import time
 
 
 
@@ -35,22 +36,22 @@ def video_feed(socketio):
     #takes frames as encoded inputs
     
     # camera = CameraThreaded(source='http://192.168.0.9:4747/video')
-    camera = CameraThreaded(source=1)
+    camera = CameraThreaded(source='http://192.168.0.7:8080/video')
     open_counter = 0
     print(f'Running the is Opened clause {open_counter + 1}. Outcome: {camera.capture.isOpened()}.')
     open_counter += 1
     while True: #and camera.running:
         if camera.capture.isOpened() == False:
             print('Error reading from source.')
-            break
+            continue
         frames = camera.get_encoded_frame()
         print(frames)
         if frames is None:
             print("Failure capturing frames for encoding. Failed at video feed.")
-            break
+            continue
         JPGs = base64.b64encode(frames).decode('utf-8')
         socketio.emit('frame', JPGs)
-        eventlet.sleep(0.1)
+        time.sleep(0.033)
 
 #@live_feed_bp.route('/')
 #def index():
