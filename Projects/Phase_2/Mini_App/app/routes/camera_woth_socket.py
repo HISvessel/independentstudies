@@ -1,11 +1,10 @@
 import base64
 from flask import render_template, Blueprint
 from flask_socketio import SocketIO
-from app.classes.camera import Camera
-import cv2 as cv
 from app.classes.threaded_cam import CameraThreaded
 from threading import Lock
 import eventlet
+import time
 
 
 
@@ -22,40 +21,30 @@ thread_lock = Lock()
 def index():
     return render_template('index.html')
 
-#def init_camera_feed(cam_instance, socketio):
-#    global camera, thread
-#    camera = cam_instance
-#
-#    with thread_lock:
-#        if thread is None:
-#           thread = socketio.start_background_task(target=video_feed, socketio=socketio)
 
-#the issue lies here: this function is not being threaded to the socket
 def video_feed(socketio):
     #takes frames as encoded inputs
     
-    # camera = CameraThreaded(source='http://192.168.0.9:4747/video')
-    camera = CameraThreaded(source=1)
-    open_counter = 0
-    print(f'Running the is Opened clause {open_counter + 1}. Outcome: {camera.capture.isOpened()}.')
-    open_counter += 1
-    while True: #and camera.running:
+    camera = CameraThreaded(source='http://192.168.0.9:4747/video')
+    #print(f'Running the is Opened clause. Outcome: {camera.capture.isOpened()}.')
+    while True:
+        #print(f'[DEBUG] Testing input time for thread')
         if camera.capture.isOpened() == False:
             print('Error reading from source.')
-            break
+            return None
+        #delays the callstack to prepare the frames at class 
         frames = camera.get_encoded_frame()
-        print(frames)
         if frames is None:
             print("Failure capturing frames for encoding. Failed at video feed.")
             break
+        print(frames)
+        time.sleep(0.2)
         JPGs = base64.b64encode(frames).decode('utf-8')
+        #print(JPGs)
         socketio.emit('frame', JPGs)
-        eventlet.sleep(0.1)
+        #print(f'[DEBUG] Will the thread reach this point?')
 
-#@live_feed_bp.route('/')
-#def index():
-#    return render_template('index.html')
 
-#@live_feed_bp.route('/stop_feed')
-#def exit_feed():
-#    pass
+@live_feed_bp.route('/stop_feed')
+def exit_feed():
+    pass

@@ -8,7 +8,7 @@ app, socketio = create_app()
 
 if __name__ == '__main__':
     #try:
-    socketio.start_background_task(video_feed)
+    #socketio.start_background_task(video_feed(socketio))
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
     #finally:
     #    camera.stop()

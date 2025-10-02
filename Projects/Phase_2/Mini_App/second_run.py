@@ -31,6 +31,7 @@ def capture_image():
         #prepares encoding and decoding for the HTML
         JPGs = base64.b64encode(encode).decode('utf-8')
 
+        #print(JPGs)
         #emits frames when socket is requested
         socketio.emit('frames', JPGs)
 
