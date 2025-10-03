@@ -1,6 +1,6 @@
 """this is the file in which the app will be run"""
 from app import create_app
-from app.routes.camera_woth_socket import video_feed
+from Projects.Phase_2.Mini_App.app.routes.camera_with_websocket import video_feed
 import asyncio
 from app.classes.threaded_cam import CameraThreaded
 
