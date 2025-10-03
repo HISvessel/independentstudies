@@ -5,7 +5,7 @@ from flask_socketio import SocketIO
 
 
 def create_app():
-    from Projects.Phase_2.Mini_App.app.routes.camera_with_websocket import live_feed_bp
+    from app.routes.camera_with_websocket import live_feed_bp
 
     app = Flask(__name__, template_folder='fhtml')
     app.config['SECRET_KEY'] = 'secret!'
