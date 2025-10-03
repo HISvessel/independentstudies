@@ -64,13 +64,8 @@ def video_feed(socketio, camera):
             #print(JPGs)
 
         socketio.emit('frame', JPGs)
-        #time.sleep
         socketio.sleep(0.01)
         #print(f'[DEBUG] Will the thread reach this point?')
-    @socketio.on('connect')
-    def handle_connect():
-        print()
-        emit()
 
 
 """ This is a mess clause made that does not work   

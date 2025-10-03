@@ -14,10 +14,5 @@ def create_app():
     socketio.init_app(app)
     app.register_blueprint(live_feed_bp)
 
-    #@socketio.on('connect')
-    #def handle_connect():
-    #    print()
-    #    emit()
-
 
     return app, socketio

@@ -98,10 +98,16 @@
       cameraFeed.style.display = "block";
       //if (!socket) {
         //connects to the server if socket is not null
+        //code section muted until further notice.
         //socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
-        socket = io.connect('http://localhost:5000')
+
+        //opens to the socket host at 0.0.0.0:5000
+        //socket = io.connect('localhost:5000') //<- this line was incorrect
+        socket = io.connect('http://0.0.0.0:5000') //<- this line was fixed
+
+        //client socket connects to the server socket emit at 'frame'
         socket.on("frame", (data) => {
-          videoStream.src = 'data:image/jpeg;base64,' + data.data;
+          videoStream.src = 'data:image/jpeg;base64,' + data;
         });
         //console.log(`Recieved frames of ${data.length} size.`)
         console.log(`WebSocket source: ${videoStream.src}`)
