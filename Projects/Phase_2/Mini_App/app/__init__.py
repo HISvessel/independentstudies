@@ -1,7 +1,6 @@
 """this script runs the application"""
 from flask import Flask
 from flask_socketio import SocketIO
-#from app.routes.camera_woth_socket import init_socketio
 
 
 

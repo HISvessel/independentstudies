@@ -25,6 +25,7 @@ def index():
 def pong():
     return 'pong'
 
+#testing async method. Project for another day
 async def encode_frames(cam):
     await asyncio.sleep(0.3)
     success, buffer = cv2.imencode('.jpg', cam, [cv2.IMWRITE__QUALITY, 85])
@@ -33,6 +34,7 @@ async def encode_frames(cam):
         
     return buffer.tobytes()
 
+#testing async method. Project for another day
 async def b_encoder(frames):
     await asyncio.sleep(0.4)
     await frames
@@ -53,18 +55,18 @@ def video_feed(socketio, camera):
             continue
         #delays the callstack to prepare the frames at class 
         frames = camera.get_encoded_frame()
-        if frames is not None:
+        #if frames is not None:
             #print(f'[FEED] Frames are encoded at {datetime.now()}')
         #print(frames)
-        #if frames is None:
+        if frames is None:
             #watch exactly WHEN error message presents itself
-            #print(f"[FEED] Failure capturing frames for encoding. Failed at {datetime.now()}")
-            #continue
-            JPGs = base64.b64encode(frames).decode('utf-8')
-            #print(JPGs)
+            print(f"[FEED] Failure capturing frames for encoding. Failed at {datetime.now()}")
+            continue
+        JPGs = base64.b64encode(frames).decode('utf-8')
 
         socketio.emit('frame', JPGs)
-        socketio.sleep(0.01)
+        #time.sleep(0.01) # <- this was stopping all socket emission amd breaknig comms
+        socketio.sleep(0.01) # <- this wil resume the websocket once camera loads
         #print(f'[DEBUG] Will the thread reach this point?')
 
 
