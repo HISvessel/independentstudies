@@ -99,7 +99,7 @@
       //if (!socket) {
         //connects to the server if socket is not null
         //socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
-        socket = io()
+        socket = io.connect('http://localhost:5000')
         socket.on("frame", (data) => {
           videoStream.src = 'data:image/jpeg;base64,' + data;
         });
