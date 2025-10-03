@@ -21,6 +21,10 @@ live_feed_bp = Blueprint('live_feed', __name__)
 def index():
     return render_template('index.html')
 
+@live_feed_bp.route('/ping')
+def pong():
+    return 'pong'
+
 async def encode_frames(cam):
     await asyncio.sleep(0.3)
     success, buffer = cv2.imencode('.jpg', cam, [cv2.IMWRITE__QUALITY, 85])
@@ -57,10 +61,11 @@ def video_feed(socketio, camera):
             #print(f"[FEED] Failure capturing frames for encoding. Failed at {datetime.now()}")
             #continue
             JPGs = base64.b64encode(frames).decode('utf-8')
-            print(JPGs)
+            #print(JPGs)
 
         socketio.emit('frame', JPGs)
-        time.sleep(0.3)
+        #time.sleep
+        socketio.sleep(0.3)
         #print(f'[DEBUG] Will the thread reach this point?')
 
 
