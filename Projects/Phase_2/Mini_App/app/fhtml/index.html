@@ -101,9 +101,9 @@
         //socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
         socket = io.connect('http://localhost:5000')
         socket.on("frame", (data) => {
-          videoStream.src = 'data:image/jpeg;base64,' + data;
+          videoStream.src = 'data:image/jpeg;base64,' + data.data;
         });
-        console.log(`Recieved frames of ${data.length} size.`)
+        //console.log(`Recieved frames of ${data.length} size.`)
         console.log(`WebSocket source: ${videoStream.src}`)
         console.log('Camera started via WebSocket.');
       //}
