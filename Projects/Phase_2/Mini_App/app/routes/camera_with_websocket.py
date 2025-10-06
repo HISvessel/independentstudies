@@ -63,6 +63,7 @@ def video_feed(socketio, camera):
             print(f"[FEED] Failure capturing frames for encoding. Failed at {datetime.now()}")
             continue
         JPGs = base64.b64encode(frames).decode('utf-8')
+        #print(JPGs)
 
         socketio.emit('frame', JPGs)
         #time.sleep(0.01) # <- this was stopping all socket emission amd breaknig comms
