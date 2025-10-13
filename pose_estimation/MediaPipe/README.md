@@ -29,7 +29,9 @@ Commonly used tools:
     
 The following known methods exist off of the created Pose object:
 > Pose.process(image) -> pose model builtin function that reads that takes a single argument, which is the frames it is trying to read.
-> Pose.process().pose_landmarks -> a tuple like object(presumably) of the captured landmarks. This itself becomes a parameter for the drawing utils solutions that takes a video feed and draws the landmarks that were detected by the pose estimation solution(Read more below). The pose_landmarks contain a total of 33 landmarks situated around the body as follows:
+> Pose.process(image).pose_landmarks -> a tuple like object(presumably) of the captured landmarks. This itself becomes a parameter for the drawing utils solutions that takes a video feed and draws the landmarks that were detected by the pose estimation solution(Read more below). 
+
+> Pose.process().pose_landmarks.landmarks -> By taking the previous object, and adding the landmarks attribute, you can see the values contained by every landmark pinned to the body when the mediapipe solutions processes the images and finds the landmarks. Doing this returns an iterable list of every single landmark with its x y and z axis values behind more pinnable attributes, meaning that in order to select the x y and z axis of whichever landmark, you call: 1) landmark.x for the x axis, 2) landmark.y for the y axis of the selected landmark, 3) landmark.z for the z axis of the selected landmark, and 4) landmark.visibility, a float numerical value indicating how much visibility does the camera have of the selected landmark at the time of recording. The pose_landmarks contain a total of 33 landmarks situated around the body as follows:
     0 - nose
     1 - left eye (inner)
     2 - left eye
@@ -63,10 +65,13 @@ The following known methods exist off of the created Pose object:
     30 - right heel
     31 - left foot index
     32 - right foot index
-> Pose.process().pose_landmarks.landmark[i] -> a tuple like object(presumably) that contains information of each of the 33 pose estimation landmarks. Each individual landmark contais the following:
+
+> Pose.process().pose_landmarks.landmark[i] -> a list of tuple-like object(presumably) that contains information of each of the 33 pose estimation landmarks. 
+# Each individual landmark contais the following:
     x and y coordinates = normalized coordinates of float 16 bit integers in between 0 and 1
     z coordinate = a depth coordinate that says how close or how far the landmark is from the camera. 
     visibility = a probability value that the landmark is visible(take occlusions and filtering into accounts for this.)
+
 > Pose.process().pose_world_landmarks -> these are the 3d implementation coordinates of each landmark. 
 > Pose.process().segmentation_mask
 
@@ -86,9 +91,14 @@ The following known methods exist off of the created Pose object:
 5. <ins>mediapipe.solutions.drawing_utils</ins>
 ---------------------------------------------------------------------------------------
 > this complements the previous mediapipe solutions by drawing the models that were created based off of the read frames.
-drawing_utils() takes the following arguments:
+# drawing_utils() takes the following arguments:
+    1) image: np.ndarray -> the iage frames that are being read
+    2) landmark_list: pose.pose_landmarks -> every landmark targeted presented at runtime
+    3) connections: pose.LANDMARK_CONNECTIONS -> draws lines to connect the landmarks as they are programmed by the builtin to connect(eg. connects left arm to left shoulder, right arm to right shoulder, etc.)
+    4) landmark_drawing_spec: DrawingSpec ->
+    5) connection_drawing_spec: DrawingSpec -> this controls the colors and the thickness for the connections. 
     
-drawing_utils.draw_landmarks() 
+> drawing_utils.draw_landmarks() -> 
 
 
 6. <ins>mediapipe.solutions.drawing_styles</ins>
