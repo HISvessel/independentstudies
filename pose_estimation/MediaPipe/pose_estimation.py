@@ -32,7 +32,7 @@ mp_drawing = mp.solutions.drawing_utils
 print('Checkpoint #4: importing the drawing utilities from MediaPipe.')
 # Start webcam
 #Camera taken from iPhone sharing the same WiFi port as laptop
-cap = cv2.VideoCapture('http://192.168.0.16:4747/video')
+cap = cv2.VideoCapture('http://192.168.9.176:4747/video')
 
 #global result printing frame object
 result = None
