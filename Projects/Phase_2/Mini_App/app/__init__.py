@@ -1,12 +1,11 @@
 """this script runs the application"""
 from flask import Flask
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, disconnect, join_room, leave_room
 from app.classes.threaded_cam import CameraThreaded
 
 
-
 def create_app():
-    from app.routes.camera_with_websocket import live_feed_bp, homepage, stop_feed, video_feed
+    from app.routes.camera_with_websocket import live_feed_bp, homepage, video_feed, stop_feed, interrupt_feed
 
     app = Flask(__name__, template_folder='fhtml')
     app.config['SECRET_KEY'] = 'secret!'
@@ -14,18 +13,37 @@ def create_app():
     socketio.init_app(app)
     app.register_blueprint(live_feed_bp)
     app.register_blueprint(homepage)
-    #camera = CameraThreaded(source="http://192.168.0.16:4747/video")
+    camera = CameraThreaded(source="http://192.168.0.16:4747/video")
 
     #registering my own events for socketio
     @socketio.on('connect')
     def connect():
         camera = CameraThreaded(source="http://192.168.0.16:4747/video")
-        socketio.start_background_task(video_feed, socketio, camera)
-        #emit('frame', emit_video_feed(camera))
-        #socketio.sleep(0.01)
+        if camera.capture.isOpened() == True:
+            join_room('private_feed')
+            socketio.start_background_task(video_feed, socketio, camera)
+        #socketio.on_event('free')
+
+#    @socketio.on('free')
+#    def free():
+#        print('[APP] this event has been reached')
+#        stop_feed(socketio, camera)
+
 
     @socketio.on('disconnect')
     def disconnect():
-        emit('free', stop_feed(socketio))
+        """if client disconnects from the websocket and was previously
+        connected, they can enter the room.
+        
+        The task would be to leave a trace or have a session that leaves
+        breadcrumbs which can be stored for a timeout period. And if it is
+        the correct person, and they were previously in the room, they can enter back.
+        
+        
+        In the meantime, they are kicked out of the room."""
+        leave_room('private_room')
+        stop_feed(socketio, camera)
+        #socketio.start_background_task(stop_feed, socketio, camera)
+        #socketio.start_background_task(interrupt_feed, socketio)
 
     return app, socketio

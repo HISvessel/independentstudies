@@ -97,7 +97,7 @@
     const videoStream = document.getElementById('videoStream');
 
     let isRecording = false;
-    let socket = null;
+    var socket = null;
 
     // Start camera
     startCameraBtn.addEventListener('click', () => {
@@ -105,11 +105,8 @@
       if (!socket) {
         //connects to the server if socket is not null
         //code section muted until further notice.
-        //socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
-
         //opens to the socket host at 0.0.0.0:5000
-        //socket = io.connect('localhost:5000') //<- this line was incorrect
-        socket = io.connect('http://0.0.0.0:5000') //<- this line was fixed
+        socket = io.connect('http://0.0.0.0:5000'); //<- this line was fixed
 
         //client socket connects to the server socket emit at 'frame'
         socket.on("frame", (data) => {
@@ -117,27 +114,33 @@
           startCameraBtn.style.background = 'grey';
           startCameraBtn.textContent = '';
 
-          stopCameraBtn.style.background = 'red'
-          stopCameraBtn.textContent = 'Turn Off Camera'
-        });
+          stopCameraBtn.style.background = 'red';
+          stopCameraBtn.textContent = 'Turn Off Camera';
+      });
     }
+  });
 
     stopCameraBtn.addEventListener('click', () => {
+        socket = io.connect('http://0.0.0.0:5000');
+
+        //client socket connects to the server socket emit at 'free'
         socket.on('free', (data) => {
-          videoStream.src = 'data:image/jpeg;base64,' + data;
-          stopCameraBtn.style.background = 'grey';
-          stopCameraBtn.textContent = '';
+          if (data === null) {
+            console.log(data)
+            videoStream.src = '';
+            stopCameraBtn.style.background = 'grey';
+            stopCameraBtn.textContent = '';
 
-
-          startCameraBtn.style.background = 'blue';
-          startCameraBtn.textContent = 'Turn On Camera';
-        });
-      })
+            startCameraBtn.style.background = 'blue';
+            startCameraBtn.textContent = 'Turn On Camera';
+        }
+      });
+    });
         //console.log(`Recieved frames of ${data.length} size.`)
         console.log(`WebSocket source: ${videoStream.src}`);
         console.log('Camera started via WebSocket.');
       //}
-    });
+//    });
 
     // Take picture
     takePictureBtn.addEventListener('click', () => {

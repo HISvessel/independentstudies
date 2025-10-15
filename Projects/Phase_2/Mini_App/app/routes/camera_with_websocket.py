@@ -24,7 +24,6 @@ def home():
 
 @live_feed_bp.route('/camera')
 def index():
-    #camera = CameraThreaded(source='http://192.168.0.16:4747/video')
     return render_template('index.html')
 
 
@@ -76,10 +75,13 @@ def video_feed(socketio, camera):
 
     print(f'[FEED] Camera opened at {datetime.now()}. Outcome: {camera.capture.isOpened()}.')
     socketio.sleep(0.6)
+    if camera.capture.isOpened() == False:
+        exit
+
     while True:
         if camera.capture.isOpened() == False:
             print('Error reading from source.')
-            continue
+            break
         #delays the callstack to prepare the frames at class 
         frames = camera.get_encoded_frame()
         #if frames is not None:
@@ -90,52 +92,18 @@ def video_feed(socketio, camera):
             print(f"[FEED] Failure capturing frames for encoding. Failed at {datetime.now()}")
             continue
         JPGs = base64.b64encode(frames).decode('utf-8')
-        socketio.emit('frame', JPGs)
+        socketio.emit('frame', JPGs, room='private_feed')
         socketio.sleep(0.01)
         #print(JPGs)
 
+def interrupt_feed(socketio):
+    socketio.close_room('private_feed')
 
-    
 
+def stop_feed(socketio, camera):
+    try:
+        socketio.close_room('private_feed')
+        camera.stop()
+    except RuntimeError:
+        print('Cannot stop camera feed.')
 
-def stop_feed(socketio):
-    socketio.emit('free', None)
-    socketio.sleep(0.01)
-    
-""" This is a mess clause made that does not work   
-    while True:
-        if camera is None:
-            print('[FEED] Camera stopped, ending feed taks')
-            break
-
-        
-        frames = camera.get_encoded_frame()
-
-        if frames is None:
-            print("Waiting for frames still")
-            time.sleep(0.1)
-            continue
-
-        JPGs = base64.b64encode(frames).decode('utf-8')
-        socketio.emit('frame', JPGs)
-        time.sleep(0.033)
-
-def init_socketio(socketio, source='http://192.168.9.175.4747/video'):
-    #registers socketio event handlers for camera feed.
-    #Called during app initialization
-    global camera, feed_task_running
-    @socketio.on('connect')
-    def handle_connect():
-        global camera, feed_task_running
-
-        if camera is None:
-            camera = CameraThreaded(source)
-        
-        if not feed_task_running:
-            feed_task_running = True
-            socketio.start_background_task(video_feed, socketio)
-"""
-
-@live_feed_bp.route('/stop_feed')
-def exit_feed():
-    pass
