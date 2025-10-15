@@ -3,7 +3,7 @@ from flask import Flask
 from flask_socketio import SocketIO, disconnect, join_room, leave_room
 from app.classes.threaded_cam import CameraThreaded
 
-
+camera = None
 def create_app():
     from app.routes.camera_with_websocket import live_feed_bp, homepage, video_feed, stop_feed, interrupt_feed
 
@@ -13,23 +13,27 @@ def create_app():
     socketio.init_app(app)
     app.register_blueprint(live_feed_bp)
     app.register_blueprint(homepage)
-    camera = CameraThreaded(source="http://192.168.0.16:4747/video")
 
-    #registering my own events for socketio
+    #registering websocket connect
     @socketio.on('connect')
     def connect():
-        camera = CameraThreaded(source="http://192.168.0.16:4747/video")
+        global camera
+        if camera is None:
+            camera = CameraThreaded(source="http://192.168.0.16:4747/video")
         if camera.capture.isOpened() == True:
             join_room('private_feed')
             socketio.start_background_task(video_feed, socketio, camera)
         #socketio.on_event('free')
 
-#    @socketio.on('free')
-#    def free():
-#        print('[APP] this event has been reached')
-#        stop_feed(socketio, camera)
+    #registering a websocket free event to manually turn off camera
+    @socketio.on('free')
+    def free():
+        global camera
+        print('[APP] this event has been reached')
+        stop_feed(socketio, camera)
+        camera = None
 
-
+    #registering a websocket disconnect for interruptions and unwanted events
     @socketio.on('disconnect')
     def disconnect():
         """if client disconnects from the websocket and was previously
@@ -41,9 +45,9 @@ def create_app():
         
         
         In the meantime, they are kicked out of the room."""
+        global camera
         leave_room('private_room')
         stop_feed(socketio, camera)
-        #socketio.start_background_task(stop_feed, socketio, camera)
-        #socketio.start_background_task(interrupt_feed, socketio)
+        camera = None
 
     return app, socketio

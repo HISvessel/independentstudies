@@ -102,8 +102,7 @@ def interrupt_feed(socketio):
 
 def stop_feed(socketio, camera):
     try:
-        socketio.close_room('private_feed')
         camera.stop()
+        socketio.close_room('private_feed')
     except RuntimeError:
         print('Cannot stop camera feed.')
-
