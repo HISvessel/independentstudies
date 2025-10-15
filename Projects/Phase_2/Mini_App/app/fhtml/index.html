@@ -34,16 +34,20 @@
     }
 
     #startCamera {
-      background: #007BFF;
+      background: #059df5;
       color: white;
     }
     #startCamera:hover {
-      background: #0056b3;
+      background: #929292;
     }
 
     #takePicture {
       background: #28a745;
       color: white;
+    }
+
+    #stopCamera {
+      background: grey;
     }
     #takePicture:hover {
       background: #1e7e34;
@@ -77,6 +81,7 @@
     <button id="startCamera">Turn On Camera</button>
     <button id="takePicture">Take Picture</button>
     <button id="recordVideo"></button>
+    <button id="stopCamera"></button>
   </div>
 
   <div id="cameraFeed">
@@ -86,17 +91,18 @@
   <script>
     const startCameraBtn = document.getElementById('startCamera');
     const takePictureBtn = document.getElementById('takePicture');
+    const stopCameraBtn = document.getElementById('stopCamera')
     const recordBtn = document.getElementById('recordVideo');
     const cameraFeed = document.getElementById('cameraFeed');
     const videoStream = document.getElementById('videoStream');
 
     let isRecording = false;
-    //let socket = null;
+    let socket = null;
 
     // Start camera
     startCameraBtn.addEventListener('click', () => {
       cameraFeed.style.display = "block";
-      //if (!socket) {
+      if (!socket) {
         //connects to the server if socket is not null
         //code section muted until further notice.
         //socket = io.connect(window.location.origin); /*('http://127.0.0.1:5000');*/
@@ -108,9 +114,27 @@
         //client socket connects to the server socket emit at 'frame'
         socket.on("frame", (data) => {
           videoStream.src = 'data:image/jpeg;base64,' + data;
+          startCameraBtn.style.background = 'grey';
+          startCameraBtn.textContent = '';
+
+          stopCameraBtn.style.background = 'red'
+          stopCameraBtn.textContent = 'Turn Off Camera'
         });
+    }
+
+    stopCameraBtn.addEventListener('click', () => {
+        socket.on('free', (data) => {
+          videoStream.src = 'data:image/jpeg;base64,' + data;
+          stopCameraBtn.style.background = 'grey';
+          stopCameraBtn.textContent = '';
+
+
+          startCameraBtn.style.background = 'blue';
+          startCameraBtn.textContent = 'Turn On Camera';
+        });
+      })
         //console.log(`Recieved frames of ${data.length} size.`)
-        console.log(`WebSocket source: ${videoStream.src}`)
+        console.log(`WebSocket source: ${videoStream.src}`);
         console.log('Camera started via WebSocket.');
       //}
     });

@@ -26,9 +26,9 @@ class CameraThreaded(User):
 
 
         #fps tracking
-        self._fps = 0.0
-        self._frame_count = 0
-        self._last_time = time.time()
+        #self._fps = 0.0
+        #self._frame_count = 0
+        #self._last_time = time.time()
 
 
     def update(self):
@@ -42,7 +42,7 @@ class CameraThreaded(User):
             #if success and frame is not None:
             with self.lock:
                 self.frame = frame
-            self._frame_count += 1
+            #self._frame_count += 1
 
             #if not self.ready.is_set():
             #        #this starts the threading Event().set() at the time when the count is larger than the preset frames
