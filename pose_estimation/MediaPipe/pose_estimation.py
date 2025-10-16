@@ -32,7 +32,7 @@ mp_drawing = mp.solutions.drawing_utils
 print('Checkpoint #4: importing the drawing utilities from MediaPipe.')
 # Start webcam
 #Camera taken from iPhone sharing the same WiFi port as laptop
-cap = cv2.VideoCapture('http://192.168.9.176:4747/video')
+cap = cv2.VideoCapture('http://192.168.0.16:4747/video')
 
 #global result printing frame object
 result = None
@@ -69,10 +69,10 @@ while True:
 
 
     if pose_p1.pose_landmarks:
-        #preparing retrieving landmarks individually
+        #preparing retrieving landmarks individually for our left and right shoulder
         landmarks = pose_p1.pose_landmarks.landmark
         right_shoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
-
+        left_shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
         #print(type(landmarks))
         #print(type(right_shoulder))
         #print(right_shoulder)
@@ -86,14 +86,18 @@ while True:
         mp_drawing.draw_landmarks(
             image=rgb_frame_1, #the frames captured by the camera and CV2
             landmark_list=pose_p1.pose_landmarks, #the pose landmarks(points on the limbs)
-            connections=body_connections #the list of connections(lines connecting points)
+            connections=body_connections, #the list of connections(lines connecting points)
+            landmark_drawing_spec=mp_drawing.DrawingSpec(color=(200, 169, 0), thickness=2, circle_radius=3),#specifications for drawing the dots of desired color
+            connection_drawing_spec=mp_drawing.DrawingSpec(color=(169, 169, 169), thickness=2)#specifications for drawing the connections to desired color
             )
 
     if pose_p2.pose_landmarks:
         mp_drawing.draw_landmarks(
             image=rgb_frame_2,
             landmark_list=pose_p2.pose_landmarks,
-            connections=mp_pose.POSE_CONNECTIONS
+            connections=mp_pose.POSE_CONNECTIONS,
+            landmark_drawing_spec=mp_drawing.DrawingSpec(color=(200, 169, 0), thickness=2, circle_radius=3),
+            connection_drawing_spec=mp_drawing.DrawingSpec(color=(112, 112, 112), thickness=2)
         )
     #converts frames into BGR format for OpenCV
     #stores data frames in a temporal buffer to be exchanged at imshow
@@ -103,17 +107,28 @@ while True:
     #draws keypoints for orbs and places them in edges
     #keyframes are stored in a loaded buffer to place in imshow()
     keypoints, descritors = cv2.ORB_create().detectAndCompute(fixed_frames, None)
-    keyframes = cv2.drawKeypoints(fixed_frames, keypoints,  None, color=(255, 0, 0), flags=0)
+    keyframes = cv2.drawKeypoints(fixed_frames, keypoints,  None, color=(255, 0, 255), flags=0)
 
     #adding conditional clause to determine our mode and update our frames
     if mode_selector == 1:
         result = fixed_frames
+
     elif mode_selector == 2:
         result = custom_mediapipe_conversion
+
+        #putting text over right shoulder
         cv2.putText(result,
                     'Right Shoulder',#str(right_shoulder), 
                     tuple(np.multiply(right_shoulder, [380, 1260]).astype(int)), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
+
+        #putting test over left shoulder
+        cv2.putText(
+            result,
+            'Left Shoulder',
+            tuple(np.multiply(left_shoulder, [760, 1260]).astype(int)), 
+            cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
+
     elif mode_selector == 3:
         result = keyframes
     
@@ -124,35 +139,31 @@ while True:
     mode_text = camera_mode[mode_selector]
 
     #putting test over my window
-    cv2.putText(result, mode_text, (450, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    cv2.putText(result, mode_text, (360, 30), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
     cv2.imshow("Pose Estimation", result)
     key = cv2.waitKey(1) & 0XFF
 
-    #draws body landmarks at the press of the p keyboard
+    #draws customized body landmarks at the press of the c keyboard
     if key == ord('c'):
         print('Selecting the frames with custom made pose estimation drawing.')
-        print(f'The converted mediapipe frames id is {id(custom_mediapipe_conversion)}')
         mode_selector = 2
-        print(id(result))
-    
+
+    #draws ORBs upon detected image edges at the press of the o keyboard
     elif key == ord('o'):
-        #keypoints, descritors = cv2.ORB_create().detectAndCompute(frame, None)
-        #keyframes = cv2.drawKeypoints(frame, keypoints,  None, color=(255, 0, 0), flags=0)
         print('Selecting the frames to add orbs on image edges.')
-        print(f'The keyframe id is {id(keyframes)}')
         mode_selector = 3
 
-
+    #presets the default frames with no effects at the press of the d keyboard
     elif key == ord('d'):
         print('Selecting the default frames.')
-        print(f'The frames id is {id(frame)}')
         mode_selector = 1
 
+    #draws the default pose estimation landmark at the press of the p keyboard
     elif key == ord('p'):
         print('Selecting the frames with the default pose estimation drawing.')
         mode_selector = 4
 
-    # Exit on pressing 'q'
+    # Exit on pressing q on the keyboard
     elif key == ord('q'):
         print('Exiting. Goodbye...')
         break
