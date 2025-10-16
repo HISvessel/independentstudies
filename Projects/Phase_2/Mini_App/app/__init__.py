@@ -5,7 +5,7 @@ from app.classes.threaded_cam import CameraThreaded
 
 camera = None
 def create_app():
-    from app.routes.camera_with_websocket import live_feed_bp, homepage, video_feed, stop_feed, interrupt_feed
+    from app.routes.camera_with_websocket import live_feed_bp, homepage, video_feed, stop_feed, interrupt_feed, enter_room, socket_room#, leave_room
 
     app = Flask(__name__, template_folder='fhtml')
     app.config['SECRET_KEY'] = 'secret!'
@@ -13,7 +13,12 @@ def create_app():
     socketio.init_app(app)
     app.register_blueprint(live_feed_bp)
     app.register_blueprint(homepage)
+    app.register_blueprint(socket_room)
+    enter_room(socketio)
+    #leave_room(socketio)
 
+    return app, socketio
+"""
     #registering websocket connect
     @socketio.on('connect')
     def connect():
@@ -36,7 +41,7 @@ def create_app():
     #registering a websocket disconnect for interruptions and unwanted events
     @socketio.on('disconnect')
     def disconnect():
-        """if client disconnects from the websocket and was previously
+        if client disconnects from the websocket and was previously
         connected, they can enter the room.
         
         The task would be to leave a trace or have a session that leaves
@@ -44,10 +49,10 @@ def create_app():
         the correct person, and they were previously in the room, they can enter back.
         
         
-        In the meantime, they are kicked out of the room."""
+        In the meantime, they are kicked out of the room.
         global camera
         leave_room('private_room')
         stop_feed(socketio, camera)
         camera = None
-
-    return app, socketio
+"""
+#    return app, socketio

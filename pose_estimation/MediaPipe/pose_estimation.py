@@ -18,11 +18,11 @@ print(mp.__version__)
 print()
 
 #checkpoint to successfully import tensorflow
-import torch
-import torchvision
-print('Checkpoint #4: imported torch and torchvision successfully.')
-print(torch.__version__)
-print(torchvision.__version__)
+#import torch
+#import torchvision
+#print('Checkpoint #4: imported torch and torchvision successfully.')
+#print(torch.__version__)
+#print(torchvision.__version__)
 #print()
 
 # Initialize MediaPipe Pose model

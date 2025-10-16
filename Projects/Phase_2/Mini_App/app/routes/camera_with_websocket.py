@@ -1,11 +1,9 @@
 import base64
 from flask import render_template, Blueprint
 from app.classes.threaded_cam import CameraThreaded
-import time
-import eventlet
 import asyncio
 from datetime import datetime
-import cv2
+from flask_socketio import SocketIO, Namespace, join_room, close_room, leave_room
 
 
 """this module is a different approach at uploading encoded frames into
@@ -13,10 +11,13 @@ a miniature web application using websockets"""
 
 homepage = Blueprint('homepage', __name__)
 live_feed_bp = Blueprint('live_feed', __name__)
-#camera = None
-#feed_task_running = False
 
-#camera = CameraThreaded(source='http://192.168.9.175:4747/video')
+#globalized objects for universal function callbacks
+camera = None
+socket = SocketIO()
+socket_room = Namespace()
+
+@socket_room.rooms('id', 'new private room')
 
 @homepage.route('/')
 def home():
@@ -67,11 +68,6 @@ def emit_video_feed(camera):
 """
 
 def video_feed(socketio, camera):
-    #takes frames as encoded inputs
-    #global camera
-    #moving the camera init elsewhere
-    #camera = CameraThreaded(source='http://192.168.0.16:4747/video')
-
 
     print(f'[FEED] Camera opened at {datetime.now()}. Outcome: {camera.capture.isOpened()}.')
     socketio.sleep(0.6)
@@ -106,3 +102,41 @@ def stop_feed(socketio, camera):
         socketio.close_room('private_feed')
     except RuntimeError:
         print('Cannot stop camera feed.')
+
+def enter_room(socket):
+    @socket.on('connect')
+    def connect():
+        global camera
+        if camera is None:
+            camera = CameraThreaded(source="http://192.168.0.16:4747/video")
+        if camera.capture.isOpened() == True:
+            join_room('private_feed')
+            socket.start_background_task(video_feed, socket, camera)
+            #socketio.on_event('free')
+
+#def leave_room(socket):
+    #registering a websocket free event to manually turn off camera
+    @socket.on('free')
+    def free():
+        global camera
+        print('[APP] this event has been reached')
+        stop_feed(socket, camera)
+        camera = None
+
+    #registering a websocket disconnect for interruptions and unwanted events
+    @socket.on('disconnect')
+    def disconnect():
+        """if client disconnects from the websocket and was previously
+        connected, they can enter the room.
+        
+        The task would be to leave a trace or have a session that leaves
+        breadcrumbs which can be stored for a timeout period. And if it is
+        the correct person, and they were previously in the room, they can enter back.
+        
+        
+        In the meantime, they are kicked out of the room."""
+        global camera
+        close_room('private_room')
+        #leave_room('private_room')
+        stop_feed(socket, camera)
+        camera = None
