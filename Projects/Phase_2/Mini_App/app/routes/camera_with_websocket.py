@@ -15,9 +15,7 @@ live_feed_bp = Blueprint('live_feed', __name__)
 #globalized objects for universal function callbacks
 camera = None
 socket = SocketIO()
-socket_room = Namespace()
 
-@socket_room.rooms('id', 'new private room')
 
 @homepage.route('/')
 def home():
@@ -72,7 +70,7 @@ def video_feed(socketio, camera):
     print(f'[FEED] Camera opened at {datetime.now()}. Outcome: {camera.capture.isOpened()}.')
     socketio.sleep(0.6)
     if camera.capture.isOpened() == False:
-        exit
+        return
 
     while True:
         if camera.capture.isOpened() == False:
@@ -136,7 +134,7 @@ def enter_room(socket):
         
         In the meantime, they are kicked out of the room."""
         global camera
-        close_room('private_room')
+        close_room('private_feed')
         #leave_room('private_room')
         stop_feed(socket, camera)
         camera = None

@@ -5,7 +5,7 @@ from app.classes.threaded_cam import CameraThreaded
 
 camera = None
 def create_app():
-    from app.routes.camera_with_websocket import live_feed_bp, homepage, video_feed, stop_feed, interrupt_feed, enter_room, socket_room#, leave_room
+    from app.routes.camera_with_websocket import live_feed_bp, homepage, video_feed, stop_feed, interrupt_feed, enter_room#, leave_room
 
     app = Flask(__name__, template_folder='fhtml')
     app.config['SECRET_KEY'] = 'secret!'
@@ -13,7 +13,6 @@ def create_app():
     socketio.init_app(app)
     app.register_blueprint(live_feed_bp)
     app.register_blueprint(homepage)
-    app.register_blueprint(socket_room)
     enter_room(socketio)
     #leave_room(socketio)
 
