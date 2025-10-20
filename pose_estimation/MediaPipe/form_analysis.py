@@ -24,10 +24,15 @@ class FormAnalyzer:
     @staticmethod
     def calculate_angle(p1, p2, p3):
         """A sample test to compare agains the previous angle between function"""
-        ba = np.array(p1) - np.array(p2)
-        bc = np.array(p3) - np.array(p2)
+        #importing our data to process into numpy arrays
+        a = np.array(p1)
+        b = np.array(p2)
+        c = np.array(p3)
 
-        cosang = np.dot(ba,bc) / np.linalg.norm(ba) * np.linalg.norm(bc)
+        radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b [1])
+        angle = np.abs(radians * 180.0/np.pi)
 
-        ang = np.degrees(np.arccos(np.clip(cosang, -1.0, 1.0)))
-        return ang
+        if angle > 180.0:
+            angle = 360 - angle
+        return angle
+    

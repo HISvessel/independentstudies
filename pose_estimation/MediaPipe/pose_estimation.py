@@ -6,6 +6,7 @@ many tests."""
 import numpy as np
 import cv2
 import mediapipe as mp
+from form_analysis import FormAnalyzer
 
 
 # Initialize MediaPipe Pose model
@@ -71,12 +72,11 @@ while True:
         l_ankle = landmarks[27]
         r_ankle = landmarks[28]
 
-        lr_shoulders = landmarks[11:12]
         right_shoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
         left_shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
-        print(f'Left shoulder is {l_shoulder}')
-        print(f'Right shoulder is {r_shoulder}')
-        print(f'')
+        #print(f'Left shoulder is {l_shoulder}')
+        #print(f'Right shoulder is {r_shoulder}')
+        #print(f'')
         #print(type(landmarks))
         #print(type(right_shoulder))
         #print(right_shoulder)
@@ -159,7 +159,8 @@ while True:
 
     elif mode_selector == 2:
         result = custom_mediapipe_conversion
-
+        #form = FormAnalyzer.angle_between(l_shoulder, l_elbow, l_wrist)
+        form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y], [l_elbow.x, l_elbow.y], [l_wrist.x, l_wrist.y])
         #putting text over right shoulder
         cv2.putText(result,
                     'Right Shoulder',#str(right_shoulder), 
@@ -171,6 +172,19 @@ while True:
                     'Left Shoulder',
                     tuple(np.multiply(left_shoulder, [760, 1260]).astype(int)), 
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
+        
+        cv2.putText(result, 
+                    f'{form}',
+                    [30, 30],
+                    #tuple(np.multiply([l_wrist.x, l_wrist.y], [760, 1800]).astype(int)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        
+        if form > 90:
+            cv2.putText(result,
+                        'You bent to 90 degrees',
+                        [120, 900],
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 0), 2)
+
 
     elif mode_selector == 3:
         #result = keyframes
