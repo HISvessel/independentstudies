@@ -34,8 +34,8 @@ if not cap.isOpened():
     print('Cannot open camera. It has not been accessed.')
 
 #human detection module:
-hog = cv2.HOGDescriptor()
-hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+#hog = cv2.HOGDescriptor()
+#hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
 while True:
     ret, frame = cap.read()
@@ -58,8 +58,25 @@ while True:
     if pose_p1.pose_landmarks:
         #preparing retrieving landmarks individually for our left and right shoulder
         landmarks = pose_p1.pose_landmarks.landmark
+        l_shoulder = landmarks[11]
+        r_shoulder = landmarks[12]
+        l_elbow = landmarks[13]
+        l_wrist = landmarks[15]
+        r_elbow = landmarks[14]
+        r_wrist = landmarks[16]
+        l_hip = landmarks[23]
+        r_hip = landmarks[24]
+        l_knee = landmarks[25]
+        r_knee = landmarks[26]
+        l_ankle = landmarks[27]
+        r_ankle = landmarks[28]
+
+        lr_shoulders = landmarks[11:12]
         right_shoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
         left_shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+        print(f'Left shoulder is {l_shoulder}')
+        print(f'Right shoulder is {r_shoulder}')
+        print(f'')
         #print(type(landmarks))
         #print(type(right_shoulder))
         #print(right_shoulder)
@@ -122,10 +139,10 @@ while True:
         #drawing a rectangle to process frames around it
 #        reticle = cv2.rectangle(result, (center_x + 360, center_y - 540), (center_x - 360, center_y + 540), (0, 0, 150), 2)
 
-        (rects, weights) = hog.detectMultiScale(result, winStride=(8, 8), padding=(16, 16), scale=1.05)
-        cv2.putText(result, 'Nobody is inside the square', (720, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (150, 250, 0), 2)
+        #(rects, weights) = hog.detectMultiScale(result, winStride=(8, 8), padding=(16, 16), scale=1.05)
+        #cv2.putText(result, 'Nobody is inside the square', (720, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (150, 250, 0), 2)
         
-        people_in_frame = 0
+        #people_in_frame = 0
         
         #putting text on the corners I wish to iterate through and process information
         cv2.putText(result, f'{left_superior}', left_superior, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 150), 2)
@@ -134,10 +151,10 @@ while True:
         cv2.putText(result, f'{right_inferior}', right_inferior, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 150), 2)
 
 
-        for (x, y, w, h) in rects:
-            cv2.rectangle(result, (x, y), (x+w, y+h), (0, 255, 0), 1)
-            people_in_frame += 1
-            cv2.putText(result, f'People on the square: {people_in_frame}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (150, 250, 0), 2)
+        #for (x, y, w, h) in rects:
+        #    cv2.rectangle(result, (x, y), (x+w, y+h), (0, 255, 0), 1)
+        #    people_in_frame += 1
+        #    cv2.putText(result, f'People on the square: {people_in_frame}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (150, 250, 0), 2)
 
 
     elif mode_selector == 2:
@@ -150,11 +167,10 @@ while True:
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
 
         #putting test over left shoulder
-        cv2.putText(
-            result,
-            'Left Shoulder',
-            tuple(np.multiply(left_shoulder, [760, 1260]).astype(int)), 
-            cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
+        cv2.putText(result,
+                    'Left Shoulder',
+                    tuple(np.multiply(left_shoulder, [760, 1260]).astype(int)), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
 
     elif mode_selector == 3:
         #result = keyframes
