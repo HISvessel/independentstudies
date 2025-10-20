@@ -3,38 +3,19 @@ data compiling and camera functionality. if all goes accordingly, we should be a
 to start a process to open a camera, record movement and close it. This is the first of 
 many tests."""
 
-print('Checkpoint #1: Initializing packages.')
 import numpy as np
-#checkpoint to successfully import opencv
 import cv2
-print('Checkpoint #2: imported OpenCV successfully.')
-print(cv2.__version__)
-print()
-
-#checkpoint to successfully import mediapipe
 import mediapipe as mp
-print('Checkpoint #3: imported mediapipe successfully')
-print(mp.__version__)
-print()
 
-#checkpoint to successfully import tensorflow
-#import torch
-#import torchvision
-#print('Checkpoint #4: imported torch and torchvision successfully.')
-#print(torch.__version__)
-#print(torchvision.__version__)
-#print()
 
 # Initialize MediaPipe Pose model
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
-print('Checkpoint #3: initializing the pose estimation landmark')
-#object for drawing utilities(our pose landmark will be drawn by using this)
 mp_drawing = mp.solutions.drawing_utils
-print('Checkpoint #4: importing the drawing utilities from MediaPipe.')
+
 # Start webcam
 #Camera taken from iPhone sharing the same WiFi port as laptop
-cap = cv2.VideoCapture('http://192.168.0.16:4747/video')
+cap = cv2.VideoCapture('http://192.168.0.8:4747/video')
 
 #global result printing frame object
 result = None
@@ -51,6 +32,10 @@ camera_mode = {
 
 if not cap.isOpened():
     print('Cannot open camera. It has not been accessed.')
+
+#human detection module:
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
 while True:
     ret, frame = cap.read()
@@ -108,12 +93,52 @@ while True:
 
     #draws keypoints for orbs and places them in edges
     #keyframes are stored in a loaded buffer to place in imshow()
-    keypoints, descritors = cv2.ORB_create().detectAndCompute(fixed_frames, None)
-    keyframes = cv2.drawKeypoints(fixed_frames, keypoints,  None, color=(255, 0, 255), flags=0)
+    #keypoints, descritors = cv2.ORB_create().detectAndCompute(fixed_frames, None)
+    #keyframes = cv2.drawKeypoints(fixed_frames, keypoints,  None, color=(255, 0, 255), flags=0)
 
     #adding conditional clause to determine our mode and update our frames
     if mode_selector == 1:
-        result = fixed_frames
+        result = frame
+
+        vertical, horizontal, _ = result.shape
+
+        center_x = horizontal // 2
+        center_y = vertical // 2
+
+        #finding the frames of our reticle dimension
+        left_superior = (center_x - 360, center_y - 240)
+        right_superior = (center_x + 360, center_y - 240)
+        left_inferior = (center_x - 360, center_y + 240)
+        right_inferior = (center_x + 360, center_y + 240)
+
+
+        """drawing a red reticle in the center of the camera shot"""
+        #horizontal line of the frame reticle
+        cv2.line(result, (center_x + 15, center_y), (center_x - 15, center_y), (0, 0, 150), 2)
+        
+        #the vertical line of the frame reticle
+        cv2.line(result, (center_x, center_y + 15), (center_x, center_y - 15), (0, 0, 150), 2)
+
+        #drawing a rectangle to process frames around it
+#        reticle = cv2.rectangle(result, (center_x + 360, center_y - 540), (center_x - 360, center_y + 540), (0, 0, 150), 2)
+
+        (rects, weights) = hog.detectMultiScale(result, winStride=(8, 8), padding=(16, 16), scale=1.05)
+        cv2.putText(result, 'Nobody is inside the square', (720, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (150, 250, 0), 2)
+        
+        people_in_frame = 0
+        
+        #putting text on the corners I wish to iterate through and process information
+        cv2.putText(result, f'{left_superior}', left_superior, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 150), 2)
+        cv2.putText(result, f'{left_inferior}', left_inferior, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 150), 2)
+        cv2.putText(result, f'{right_superior}', right_superior, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 150), 2)
+        cv2.putText(result, f'{right_inferior}', right_inferior, cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 150), 2)
+
+
+        for (x, y, w, h) in rects:
+            cv2.rectangle(result, (x, y), (x+w, y+h), (0, 255, 0), 1)
+            people_in_frame += 1
+            cv2.putText(result, f'People on the square: {people_in_frame}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (150, 250, 0), 2)
+
 
     elif mode_selector == 2:
         result = custom_mediapipe_conversion
@@ -132,6 +157,17 @@ while True:
             cv2.FONT_HERSHEY_SIMPLEX, 1, (112, 0, 255), 2)
 
     elif mode_selector == 3:
+        #result = keyframes
+        vertical, horizontal, _ = result.shape
+        center_x = horizontal // 2
+        center_y = vertical // 2
+        reticle = cv2.rectangle(result, (center_x + 360, center_y - 360), (center_x - 360, center_y + 360), (0, 0, 150), 2)
+
+        #for pixels_x in range(280, 1000):
+        #    for pixels_y in range(120, 600):
+        keypoints, descritors = cv2.ORB_create().detectAndCompute(result[280:1000, 120:600], None)
+        keyframes = cv2.drawKeypoints(result, keypoints,  None, color=(255, 0, 255), flags=0)
+                #continue
         result = keyframes
     
     elif mode_selector == 4:
@@ -141,7 +177,7 @@ while True:
     mode_text = camera_mode[mode_selector]
 
     #putting test over my window
-    cv2.putText(result, mode_text, (360, 30), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+    #cv2.putText(result, mode_text, (360, 30), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
     cv2.imshow("Pose Estimation", result)
     key = cv2.waitKey(1) & 0XFF
 
