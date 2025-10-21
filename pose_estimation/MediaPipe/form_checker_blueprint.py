@@ -52,62 +52,79 @@ while True:
 
     #selecting our landmarks for math equation
 
-    if result.pose_landmarks:
-        custom_landmark_list = landmark_pb2.NormalizedLandmarkList()
+    if not result.pose_landmarks:
+        continue
+    custom_landmark_list = landmark_pb2.NormalizedLandmarkList()
         #custom_landmark_list.extend(body_landmarks)
 
-        landmarks = result.pose_landmarks.landmark
-        l_shoulder = landmarks[11]
-        r_shoulder = landmarks[12]
-        l_elbow = landmarks[13]
-        l_wrist = landmarks[15]
-        r_elbow = landmarks[14]
-        r_wrist = landmarks[16]
-        l_hip = landmarks[23]
-        r_hip = landmarks[24]
-        l_knee = landmarks[25]
-        r_knee = landmarks[26]
-        l_ankle = landmarks[27]
-        r_ankle = landmarks[28]
+    landmarks = result.pose_landmarks.landmark
+    l_shoulder = landmarks[11]
+    r_shoulder = landmarks[12]
+    l_elbow = landmarks[13]
+    l_wrist = landmarks[15]
+    r_elbow = landmarks[14]
+    r_wrist = landmarks[16]
+    l_hip = landmarks[23]
+    r_hip = landmarks[24]
+    l_knee = landmarks[25]
+    r_knee = landmarks[26]
+    l_ankle = landmarks[27]
+    r_ankle = landmarks[28]
 
 
-        mp_draw.draw_landmarks(pose_frame,
-                              result.pose_landmarks,
-                              body_connections,
-                              mp_draw.DrawingSpec((200, 150, 0), 2, 2),
-                              mp_draw.DrawingSpec((112, 112, 112), 1, 2))
+        #mp_draw.draw_landmarks(pose_frame,
+        #                      result.pose_landmarks,
+        #                      body_connections,
+        #                      mp_draw.DrawingSpec((200, 150, 0), 2, 2),
+        #                      mp_draw.DrawingSpec((112, 112, 112), 1, 2))
 
     #preparing our math equations for displaying form cues as text on windows
-        arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
+    arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
                                                     [l_elbow.x, l_elbow.y],
                                                     [l_wrist.x, l_wrist.y])
     
-        body_straight_form = FormAnalyzer.calculate_body_angle([l_shoulder.x, l_shoulder.y],
+    body_straight_form = FormAnalyzer.calculate_body_angle([l_shoulder.x, l_shoulder.y],
                                                       [l_hip.x, l_hip.y],
                                                       [l_ankle.x, l_ankle.y])
+
+    pushup_body_angle = FormAnalyzer.calculate_angle([l_wrist.x, l_wrist.y],
+                                                         [l_hip.x, l_hip.y],
+                                                         [l_ankle.x, l_ankle.y])
     
-        if arm_bending_form < 45:
-            cv2.putText(pose_frame,
-                    'Good, you have bent the arm correctly',
+    if arm_bending_form < 60:
+            #this is a sample to draw when the arm is bent 
+        mp_draw.draw_landmarks(pose_frame,
+                              result.pose_landmarks,
+                              body_connections,
+                              mp_draw.DrawingSpec((200, 150, 0), 1, 1),
+                              mp_draw.DrawingSpec((112, 112, 112), 4, 4))
+
+        cv2.putText(pose_frame,
+                    'Good, you can now see the landmarks drawn',
                     [50, 50],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (0, 180, 0), 2)
+            #cv2.putText(pose_frame,
+            #        'Good, you have bent the arm correctly',
+            #        [50, 50],
+            #       cv2.FONT_HERSHEY_SIMPLEX,
+            #        1, (0, 180, 0), 2)
     
-        if body_straight_form == 180:
-            cv2.putText(pose_frame,
+    if body_straight_form == 180:
+        cv2.putText(pose_frame,
                     'Body is very straight!',
                     [50, 75],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (0, 180, 0), 2)
 
-        if body_straight_form < 160:
+    if body_straight_form < 160:
             cv2.putText(pose_frame,
                     f'Sagging the hips down: {body_straight_form}. Engage core!',
                     [50, 100],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (180, 0, 0), 2)
     
-        if body_straight_form > 190:
+    if body_straight_form > 190:
             cv2.putText(pose_frame, 
                     'Piking at the hips. Tighten glutes!', 
                     [50, 150], 
@@ -115,9 +132,11 @@ while True:
                     1, (180, 0, 0), 2)
 
     #converting back to BGR format and displaying on screen
-    cv2.putText(pose_frame, f'{arm_bending_form}',
-                tuple(np.multiply([l_elbow.x, l_elbow.y], [640, 480]).astype(int)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (190, 190, 190), 2, cv2.LINE_AA)
+    cv2.putText(pose_frame, f'Left Arm angle: {arm_bending_form}', [900, 50],
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (190, 0, 190), 2, cv2.LINE_AA)
+
+    cv2.putText(pose_frame, f'Body angle: {body_straight_form}', [900, 100],
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (190, 0, 190), 2, cv2.LINE_AA)
 
     frames_with_landmarks = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
     cv2.imshow('Exercise page', frames_with_landmarks)
