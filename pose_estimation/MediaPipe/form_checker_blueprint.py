@@ -78,43 +78,47 @@ while True:
                               mp_draw.DrawingSpec((112, 112, 112), 1, 2))
 
     #preparing our math equations for displaying form cues as text on windows
-    arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
+        arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
                                                     [l_elbow.x, l_elbow.y],
                                                     [l_wrist.x, l_wrist.y])
     
-    body_straight_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
+        body_straight_form = FormAnalyzer.calculate_body_angle([l_shoulder.x, l_shoulder.y],
                                                       [l_hip.x, l_hip.y],
                                                       [l_ankle.x, l_ankle.y])
     
-    if arm_bending_form < 45:
-        cv2.putText(pose_frame,
+        if arm_bending_form < 45:
+            cv2.putText(pose_frame,
                     'Good, you have bent the arm correctly',
                     [50, 50],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (0, 180, 0), 2)
     
-    if body_straight_form == 180:
-        cv2.putText(pose_frame,
+        if body_straight_form == 180:
+            cv2.putText(pose_frame,
                     'Body is very straight!',
                     [50, 75],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (0, 180, 0), 2)
 
-    if body_straight_form < 160:
-        cv2.putText(pose_frame,
+        if body_straight_form < 160:
+            cv2.putText(pose_frame,
                     f'Sagging the hips down: {body_straight_form}. Engage core!',
                     [50, 100],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (180, 0, 0), 2)
     
-    if body_straight_form > 190:
-        cv2.putText(pose_frame, 
+        if body_straight_form > 190:
+            cv2.putText(pose_frame, 
                     'Piking at the hips. Tighten glutes!', 
                     [50, 150], 
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1, (180, 0, 0), 2)
 
     #converting back to BGR format and displaying on screen
+    cv2.putText(pose_frame, f'{arm_bending_form}',
+                tuple(np.multiply([l_elbow.x, l_elbow.y], [640, 480]).astype(int)),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (190, 190, 190), 2, cv2.LINE_AA)
+
     frames_with_landmarks = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
     cv2.imshow('Exercise page', frames_with_landmarks)
     key = cv2.waitKey(1) & 0XFF
