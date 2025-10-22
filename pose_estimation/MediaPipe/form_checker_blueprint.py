@@ -2,7 +2,6 @@ import mediapipe as mp
 import numpy as np
 import cv2
 from form_analysis import FormAnalyzer
-from mediapipe.framework.formats import landmark_pb2
 
 cap = cv2.VideoCapture('http://192.168.0.8:4747/video')
 mp_pose = mp.solutions.pose
@@ -34,128 +33,211 @@ body_landmarks = [
     mp_pose.PoseLandmark.LEFT_HEEL.value,
     mp_pose.PoseLandmark.RIGHT_HEEL.value
 ]
+#
+READY_FOR_PUSHUP = False
+READY_FOR_SQUAT = False
+
+#counter for our individual exercises
+PUSHUP_COUNTER = 0
+SQUAT_COUNTER = 0
+
+#toggle selector of our frames to read
+exercise_module = {
+    0: 'default',
+    1: 'pushup',
+    2: 'squat'
+}
+#selecting a proxy element to iterate through on toggle
+mode_selector = 0
+
+#the final display to show
+display = None
+
+
 while True:
     success, frame = cap.read()
-
     if not success:
         print('Failure at reading.')
         break
 
-    #rotating frames for smartphone feeds
-    #rotated_frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+    #selecting the default frames with no effects or visuals
+    if mode_selector == 0:
+        display = frame
 
-    """RGB frames for portraint camera"""
-    pose_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    
-    """RGB frames for smartphone camera"""
-    #pose_frame = cv2.cvtColor(rotated_frame, cv2.COLOR_BGR2RGB)
+    #selecting the pushup model and data
+    elif mode_selector == 1:
+        """RGB frames for portraint camera"""
+        pose_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    
-    #creating our own frozenset of body connections for drawing utils
-    #body_connections = frozenset([  (11, 12), (11, 13), (13, 15), (12, 14), (14, 16),
-    #                              (11, 23), (12, 24), (11, 24), (12, 23), (23, 24),
-    #                              (23, 25), (24, 26), (25, 27), (26, 28)])
-    result = pose.process(pose_frame)
+        """RGB frames for smartphone camera"""
+        result = pose.process(pose_frame)
+        if not result.pose_landmarks:
+            continue
 
-    #selecting our landmarks for math equation
+        landmarks = result.pose_landmarks.landmark
+        #Manually selecting all of the desired pose landmarks to focus on for computation
+        l_ear = landmarks[7]
+        r_ear = landmarks[8]
+        l_shoulder = landmarks[11]
+        r_shoulder = landmarks[12]
+        l_elbow = landmarks[13]
+        l_wrist = landmarks[15]
+        r_elbow = landmarks[14]
+        r_wrist = landmarks[16]
+        l_hip = landmarks[23]
+        r_hip = landmarks[24]
+        l_knee = landmarks[25]
+        r_knee = landmarks[26]
+        l_ankle = landmarks[27]
+        r_ankle = landmarks[28]
+        #l_heel = landmarks[29]
+        #r_heel = landmarks[30]
+        l_toe = landmarks[31]
+        r_toe = landmarks[32]
 
-    if not result.pose_landmarks:
-        continue
-    custom_landmark_list = landmark_pb2.NormalizedLandmarkList()
-        #custom_landmark_list.extend(body_landmarks)
-
-    landmarks = result.pose_landmarks.landmark
-    l_ear = landmarks[7]
-    r_ear = landmarks[8]
-    l_shoulder = landmarks[11]
-    r_shoulder = landmarks[12]
-    l_elbow = landmarks[13]
-    l_wrist = landmarks[15]
-    r_elbow = landmarks[14]
-    r_wrist = landmarks[16]
-    l_hip = landmarks[23]
-    r_hip = landmarks[24]
-    l_knee = landmarks[25]
-    r_knee = landmarks[26]
-    l_ankle = landmarks[27]
-    r_ankle = landmarks[28]
-
-
-        #mp_draw.draw_landmarks(pose_frame,
-        #                      result.pose_landmarks,
-        #                      body_connections,
-        #                      mp_draw.DrawingSpec((200, 150, 0), 2, 2),
-        #                      mp_draw.DrawingSpec((112, 112, 112), 1, 2))
-
-    #preparing our math equations for displaying form cues as text on windows
-    arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
+        #optimizing arm bend for a 60 degrees bend rule
+        arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
                                                     [l_elbow.x, l_elbow.y],
                                                     [l_wrist.x, l_wrist.y])
     
-    body_straight_form = FormAnalyzer.calculate_body_angle([l_ear.y, l_ear.x],
+        #optimizing elbow flaring for a 30 degree bend(try for x*z and y*z)
+        arm_flaring_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.z],
+                                                        [l_elbow.x, l_elbow.z],
+                                                        [l_wrist.x, l_wrist.z])
+
+        #optimizing leg straightness for a 160 degree bend rule
+        leg_bending_form = FormAnalyzer.calculate_angle([l_hip.x, l_hip.y],
+                                                    [l_knee.x, l_knee.y],
+                                                    [l_toe.x, l_toe.y])
+
+        body_straight_form = FormAnalyzer.calculate_body_angle([l_ear.y, l_ear.x],
                                                       [l_hip.y, l_hip.x],
                                                       [l_ankle.y, l_ankle.x])
 
-    pushup_body_angle = FormAnalyzer.calculate_angle([l_wrist.y, l_wrist.z],
-                                                         [l_hip.y, l_hip.z],
-                                                         [l_ankle.y, l_ankle.z])
-    
-    #if arm_bending_form < 60:
-        #this is a sample to draw when the arm is bent 
-    mp_draw.draw_landmarks(pose_frame,
+        pushup_body_angle = FormAnalyzer.calculate_angle([l_wrist.y, l_wrist.x],
+                                                         [l_hip.y, l_hip.x],
+                                                         [l_ankle.y, l_ankle.x])
+
+        mp_draw.draw_landmarks(pose_frame,
                               result.pose_landmarks,
                               body_connections,
-                              mp_draw.DrawingSpec((200, 150, 0), 1, 1),
-                              mp_draw.DrawingSpec((112, 112, 112), 4, 4))
-    if arm_bending_form < 60:
-        cv2.putText(pose_frame,
-                    'Good, you can now see the landmarks drawn',
-                    [50, 50],
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5, (0, 180, 0), 2)
-            #cv2.putText(pose_frame,
-            #        'Good, you have bent the arm correctly',
-            #        [50, 50],
-            #       cv2.FONT_HERSHEY_SIMPLEX,
-            #        1, (0, 180, 0), 2)
+                              mp_draw.DrawingSpec((112, 112, 112), 3, 3),
+                              mp_draw.DrawingSpec((50, 255, 25), 2, 2))
+
+        # research text for arm bending coordinates
+        cv2.putText(pose_frame, f'Left Arm bend angle: {arm_bending_form}', [900, 50], #[900, 50] for portait views, [50, 200] for phones
+            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
+
+        #research text for elbow flaring coordinates
+        cv2.putText(pose_frame, f'Left Elbow flare angle: {l_shoulder.z}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
+            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
+        
+        #research text for elbow flaring coordinates
+        cv2.putText(pose_frame, f'Distance between client and camera: {arm_flaring_form}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
+            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
+
+        converted_pushup_display = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
+        display = converted_pushup_display
+
+    #selcting the squat model and data
+    elif mode_selector == 2:
+
+        """RGB frames for portraint camera"""
+        pose_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     
-    if 180 < body_straight_form < 190:
-        cv2.putText(pose_frame,
+        """RGB frames for smartphone camera"""
+        result = pose.process(pose_frame)
+
+        if not result.pose_landmarks:
+            continue
+
+        landmarks = result.pose_landmarks.landmark
+        #Manually selecting all of the desired pose landmarks to focus on for computation
+        l_ear = landmarks[7]
+        r_ear = landmarks[8]
+        l_shoulder = landmarks[11]
+        r_shoulder = landmarks[12]
+        l_elbow = landmarks[13]
+        l_wrist = landmarks[15]
+        r_elbow = landmarks[14]
+        r_wrist = landmarks[16]
+        l_hip = landmarks[23]
+        r_hip = landmarks[24]
+        l_knee = landmarks[25]
+        r_knee = landmarks[26]
+        l_ankle = landmarks[27]
+        r_ankle = landmarks[28]
+        l_heel = landmarks[29]
+        r_heel = landmarks[30]
+
+
+        #preparing our math equations for displaying form cues as text on windows    
+        leg_bending_form = FormAnalyzer.calculate_angle([l_hip.x, l_hip.y],
+                                                    [l_knee.x, l_knee.y],
+                                                    [l_heel.x, l_heel.y])
+    
+        body_straight_form = FormAnalyzer.calculate_body_angle([l_ear.y, l_ear.x],
+                                                      [l_hip.y, l_hip.x],
+                                                      [l_ankle.y, l_ankle.x])
+    
+        mp_draw.draw_landmarks(pose_frame,
+                              result.pose_landmarks,
+                              body_connections,
+                              mp_draw.DrawingSpec((112, 112, 112), 3, 3),
+                              mp_draw.DrawingSpec((50, 205, 25), 4, 4))
+
+        if leg_bending_form < 60:
+            cv2.putText(pose_frame,
+                     'Leg is bending for a squat',
+                     [50, 25], 
+                     cv2.FONT_HERSHEY_SIMPLEX,
+                     0.7, (0, 180, 0), 2)
+
+        if 180 < body_straight_form < 190:
+            cv2.putText(pose_frame,
                     'Body is straight!',
                     [50, 75],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.7, (0, 180, 0), 2)
 
-    if body_straight_form < 160:
+        if body_straight_form < 160 and leg_bending_form < 60:
             cv2.putText(pose_frame,
-                    f'Sagging the hips down: {body_straight_form}. Engage core!',
+                    f"That's a squat",
                     [50, 100],
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.7, (180, 0, 0), 2)
-    
-    if body_straight_form > 190:
-            cv2.putText(pose_frame, 
-                    'Piking at the hips. Tighten glutes!', 
-                    [50, 150], 
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.7, (180, 0, 0), 2)
 
-    #converting back to BGR format and displaying on screen
-    cv2.putText(pose_frame, f'Left Arm angle: {arm_bending_form}', [900, 50], #[900, 50] for portait views, [50, 200] for phones
+        cv2.putText(pose_frame, f'Body angle: {body_straight_form}', [900, 100], #[900, 100] for portrait views, [50, 250] for phones
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
+        
+        #preparing to display
+        converted_squat_display = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
+        display = converted_squat_display
 
-    cv2.putText(pose_frame, f'Body angle: {body_straight_form}', [900, 100], #[900, 100] for portrait views, [50, 250] for phones
-            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
-    
-    cv2.putText(pose_frame, f'Pushup line angle is: {pushup_body_angle}', [900, 150], #[900, 150] for portrait views, [50, 300] for phones
-            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
+    #a black square with white text indicating where the camera toggle is
+    mode_text = exercise_module[mode_selector]
+    cv2.rectangle(display, (50, 200), (200, 600), (0, 0, 0), -1)
+    cv2.putText(display, mode_text, [100, 250],
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (250, 250, 250), 2, cv2.LINE_AA)
 
-    frames_with_landmarks = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
-    cv2.imshow('Exercise page', frames_with_landmarks)
+    cv2.imshow('Exercise page', display)
     key = cv2.waitKey(1) & 0XFF
 
+    #quits on q
     if key == ord('q'):
         break
+
+    #deploys squat mathematics and pose landmark on s
+    if key == ord('s'):
+        mode_selector = 2
+
+    #deploys pushup mathematics and pose landmark on p
+    if key == ord('p'):
+        mode_selector = 1
+
+    #returns to default frames
+    if key == ord('d'):
+        mode_selector = 0
 
 cap.release()
 cv2.destroyAllWindows()
