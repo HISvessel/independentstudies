@@ -41,8 +41,15 @@ while True:
         print('Failure at reading.')
         break
 
-    #converting to RBG format for Mediapipe
+    #rotating frames for smartphone feeds
+    #rotated_frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+
+    """RGB frames for portraint camera"""
     pose_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    
+    """RGB frames for smartphone camera"""
+    #pose_frame = cv2.cvtColor(rotated_frame, cv2.COLOR_BGR2RGB)
+
     
     #creating our own frozenset of body connections for drawing utils
     #body_connections = frozenset([  (11, 12), (11, 13), (13, 15), (12, 14), (14, 16),
@@ -58,6 +65,8 @@ while True:
         #custom_landmark_list.extend(body_landmarks)
 
     landmarks = result.pose_landmarks.landmark
+    l_ear = landmarks[7]
+    r_ear = landmarks[8]
     l_shoulder = landmarks[11]
     r_shoulder = landmarks[12]
     l_elbow = landmarks[13]
@@ -83,60 +92,63 @@ while True:
                                                     [l_elbow.x, l_elbow.y],
                                                     [l_wrist.x, l_wrist.y])
     
-    body_straight_form = FormAnalyzer.calculate_body_angle([l_shoulder.x, l_shoulder.y],
-                                                      [l_hip.x, l_hip.y],
-                                                      [l_ankle.x, l_ankle.y])
+    body_straight_form = FormAnalyzer.calculate_body_angle([l_ear.y, l_ear.x],
+                                                      [l_hip.y, l_hip.x],
+                                                      [l_ankle.y, l_ankle.x])
 
-    pushup_body_angle = FormAnalyzer.calculate_angle([l_wrist.x, l_wrist.y],
-                                                         [l_hip.x, l_hip.y],
-                                                         [l_ankle.x, l_ankle.y])
+    pushup_body_angle = FormAnalyzer.calculate_angle([l_wrist.y, l_wrist.z],
+                                                         [l_hip.y, l_hip.z],
+                                                         [l_ankle.y, l_ankle.z])
     
-    if arm_bending_form < 60:
-            #this is a sample to draw when the arm is bent 
-        mp_draw.draw_landmarks(pose_frame,
+    #if arm_bending_form < 60:
+        #this is a sample to draw when the arm is bent 
+    mp_draw.draw_landmarks(pose_frame,
                               result.pose_landmarks,
                               body_connections,
                               mp_draw.DrawingSpec((200, 150, 0), 1, 1),
                               mp_draw.DrawingSpec((112, 112, 112), 4, 4))
-
+    if arm_bending_form < 60:
         cv2.putText(pose_frame,
                     'Good, you can now see the landmarks drawn',
                     [50, 50],
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    1, (0, 180, 0), 2)
+                    0.5, (0, 180, 0), 2)
             #cv2.putText(pose_frame,
             #        'Good, you have bent the arm correctly',
             #        [50, 50],
             #       cv2.FONT_HERSHEY_SIMPLEX,
             #        1, (0, 180, 0), 2)
     
-    if body_straight_form == 180:
+    if 180 < body_straight_form < 190:
         cv2.putText(pose_frame,
-                    'Body is very straight!',
+                    'Body is straight!',
                     [50, 75],
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    1, (0, 180, 0), 2)
+                    0.7, (0, 180, 0), 2)
 
     if body_straight_form < 160:
             cv2.putText(pose_frame,
                     f'Sagging the hips down: {body_straight_form}. Engage core!',
                     [50, 100],
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    1, (180, 0, 0), 2)
+                    0.7, (180, 0, 0), 2)
     
     if body_straight_form > 190:
             cv2.putText(pose_frame, 
                     'Piking at the hips. Tighten glutes!', 
                     [50, 150], 
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    1, (180, 0, 0), 2)
+                    0.7, (180, 0, 0), 2)
 
     #converting back to BGR format and displaying on screen
-    cv2.putText(pose_frame, f'Left Arm angle: {arm_bending_form}', [900, 50],
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (190, 0, 190), 2, cv2.LINE_AA)
+    cv2.putText(pose_frame, f'Left Arm angle: {arm_bending_form}', [900, 50], #[900, 50] for portait views, [50, 200] for phones
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
 
-    cv2.putText(pose_frame, f'Body angle: {body_straight_form}', [900, 100],
-            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (190, 0, 190), 2, cv2.LINE_AA)
+    cv2.putText(pose_frame, f'Body angle: {body_straight_form}', [900, 100], #[900, 100] for portrait views, [50, 250] for phones
+            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
+    
+    cv2.putText(pose_frame, f'Pushup line angle is: {pushup_body_angle}', [900, 150], #[900, 150] for portrait views, [50, 300] for phones
+            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
 
     frames_with_landmarks = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
     cv2.imshow('Exercise page', frames_with_landmarks)
