@@ -129,11 +129,11 @@ while True:
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
 
         #research text for elbow flaring coordinates
-        cv2.putText(pose_frame, f'Left Elbow flare angle: {l_shoulder.z}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
+        cv2.putText(pose_frame, f'Left Elbow flare angle: {arm_flaring_form}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
         
         #research text for elbow flaring coordinates
-        cv2.putText(pose_frame, f'Distance between client and camera: {arm_flaring_form}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
+        cv2.putText(pose_frame, f'camera/client distance: {l_shoulder.visibility}', [900, 150], #[900, 50] for portait views, [50, 200] for phones
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
 
         converted_pushup_display = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)
@@ -216,8 +216,8 @@ while True:
 
     #a black square with white text indicating where the camera toggle is
     mode_text = exercise_module[mode_selector]
-    cv2.rectangle(display, (50, 200), (200, 600), (0, 0, 0), -1)
-    cv2.putText(display, mode_text, [100, 250],
+    cv2.rectangle(display, (50, 200), (300, 400), (0, 0, 0), -1)
+    cv2.putText(display, mode_text, [75, 250],
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (250, 250, 250), 2, cv2.LINE_AA)
 
     cv2.imshow('Exercise page', display)
