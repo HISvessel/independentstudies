@@ -48,7 +48,7 @@ exercise_module = {
     2: 'squat'
 }
 #selecting a proxy element to iterate through on toggle
-mode_selector = 0
+mode_selector = 1
 
 #the final display to show
 display = None
@@ -90,20 +90,28 @@ while True:
         r_knee = landmarks[26]
         l_ankle = landmarks[27]
         r_ankle = landmarks[28]
-        #l_heel = landmarks[29]
-        #r_heel = landmarks[30]
+        l_heel = landmarks[29]
+        r_heel = landmarks[30]
         l_toe = landmarks[31]
         r_toe = landmarks[32]
 
         #optimizing arm bend for a 60 degrees bend rule
-        arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
+        left_arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
                                                     [l_elbow.x, l_elbow.y],
                                                     [l_wrist.x, l_wrist.y])
-    
+
+        right_arm_bending_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.y],
+                                                    [l_elbow.x, l_elbow.y],
+                                                    [l_wrist.x, l_wrist.y])
+
         #optimizing elbow flaring for a 30 degree bend(try for x*z and y*z)
-        arm_flaring_form = FormAnalyzer.calculate_angle([l_shoulder.x, l_shoulder.z],
-                                                        [l_elbow.x, l_elbow.z],
-                                                        [l_wrist.x, l_wrist.z])
+        left_arm_flaring_form = FormAnalyzer.calculate_flare_angle([l_shoulder.x, l_shoulder.y],
+                                                        [l_elbow.x, l_elbow.y],
+                                                        [l_wrist.x, l_wrist.y])
+
+        right_arm_flaring_form = FormAnalyzer.calculate_flare_angle([l_shoulder.x, l_shoulder.y],
+                                                        [l_elbow.x, l_elbow.y],
+                                                        [l_wrist.x, l_wrist.y])
 
         #optimizing leg straightness for a 160 degree bend rule
         leg_bending_form = FormAnalyzer.calculate_angle([l_hip.x, l_hip.y],
@@ -117,23 +125,30 @@ while True:
         pushup_body_angle = FormAnalyzer.calculate_angle([l_wrist.y, l_wrist.x],
                                                          [l_hip.y, l_hip.x],
                                                          [l_ankle.y, l_ankle.x])
-
-        mp_draw.draw_landmarks(pose_frame,
+        pushup_position = 70 <= pushup_body_angle <= 90 and l_hip.y < l_heel.y
+        if pushup_position:
+            mp_draw.draw_landmarks(pose_frame,
                               result.pose_landmarks,
                               body_connections,
                               mp_draw.DrawingSpec((112, 112, 112), 3, 3),
                               mp_draw.DrawingSpec((50, 255, 25), 2, 2))
+        
+        if left_arm_flaring_form > 45:
+            cv2.putText(pose_frame, 'Elbow flaring detected', [75, 50], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (190, 0, 0))
+
+        if right_arm_flaring_form > 45:
+            cv2.putText(pose_frame, 'Elbow flaring detected', [75, 100], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (190, 0, 0))
 
         # research text for arm bending coordinates
-        cv2.putText(pose_frame, f'Left Arm bend angle: {arm_bending_form}', [900, 50], #[900, 50] for portait views, [50, 200] for phones
+        cv2.putText(pose_frame, f'Left Arm bend angle: {left_arm_bending_form}', [900, 50], #[900, 50] for portait views, [50, 200] for phones
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
 
         #research text for elbow flaring coordinates
-        cv2.putText(pose_frame, f'Left Elbow flare angle: {arm_flaring_form}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
+        cv2.putText(pose_frame, f'Left Elbow flare angle: {left_arm_flaring_form}', [900, 100], #[900, 50] for portait views, [50, 200] for phones
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
         
         #research text for elbow flaring coordinates
-        cv2.putText(pose_frame, f'camera/client distance: {l_shoulder.visibility}', [900, 150], #[900, 50] for portait views, [50, 200] for phones
+        cv2.putText(pose_frame, f'Current body angle: {pushup_body_angle}', [900, 150], #[900, 50] for portait views, [50, 200] for phones
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 70, 190), 2, cv2.LINE_AA)
 
         converted_pushup_display = cv2.cvtColor(pose_frame, cv2.COLOR_RGB2BGR)

@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from collections import deque
 
 class FormAnalyzer:
     @staticmethod
@@ -29,7 +30,19 @@ class FormAnalyzer:
         b = np.array(p2)
         c = np.array(p3)
 
-        radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b [0])
+        radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b[0])
+        angle = np.abs(radians * 180.0/np.pi)
+
+        if angle > 180.0:
+            angle = 360 - angle
+        return angle
+    
+    @staticmethod
+    def calculate_flare_angle(p1, p2, p3):
+        a = np.array(p1)
+        b = np.array(p2)
+        c = np.array(p3)
+        radians = np.arctan2(a[1] - b[1], a[0] - b[0]) - np.arctan2(a[1] - c[1], a[0] - c[0])
         angle = np.abs(radians * 180.0/np.pi)
 
         if angle > 180.0:
@@ -48,3 +61,7 @@ class FormAnalyzer:
         angle = np.abs(radians * 180.0/np.pi)
 
         return angle
+    
+    def normalize_landmarks(landmarks):
+        left_hip = landmarks[23]
+        right_hip = landmarks[24]
