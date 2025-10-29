@@ -3,7 +3,8 @@ import numpy as np
 import cv2
 from form_analysis import FormAnalyzer
 
-cap = cv2.VideoCapture('http://192.168.0.8:4747/video')
+cap = cv2.VideoCapture('http://192.168.0.3:4747/video')
+#cap = cv2.VideoCapture(0)
 mp_pose = mp.solutions.pose
 mp_draw = mp.solutions.drawing_utils
 
@@ -107,11 +108,11 @@ while True:
         #optimizing elbow flaring for a 30 degree bend(try for x*z and y*z)
         left_arm_flaring_form = FormAnalyzer.calculate_flare_angle([l_shoulder.x, l_shoulder.y],
                                                         [l_elbow.x, l_elbow.y],
-                                                        [l_wrist.x, l_wrist.y])
+                                                        [l_hip.x, l_hip.y])
 
-        right_arm_flaring_form = FormAnalyzer.calculate_flare_angle([l_shoulder.x, l_shoulder.y],
-                                                        [l_elbow.x, l_elbow.y],
-                                                        [l_wrist.x, l_wrist.y])
+        #right_arm_flaring_form = FormAnalyzer.calculate_flare_angle([r_hip.x, r_hip.y],
+        #                                                [r_shoulder.x, r_shoulder.y],
+        #                                                [r_elbow.x, r_elbow.y])
 
         #optimizing leg straightness for a 160 degree bend rule
         leg_bending_form = FormAnalyzer.calculate_angle([l_hip.x, l_hip.y],
@@ -136,8 +137,8 @@ while True:
         if left_arm_flaring_form > 45:
             cv2.putText(pose_frame, 'Elbow flaring detected', [75, 50], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (190, 0, 0))
 
-        if right_arm_flaring_form > 45:
-            cv2.putText(pose_frame, 'Elbow flaring detected', [75, 100], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (190, 0, 0))
+        #if right_arm_flaring_form > 45:
+        #    cv2.putText(pose_frame, 'Elbow flaring detected', [75, 100], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (190, 0, 0))
 
         # research text for arm bending coordinates
         cv2.putText(pose_frame, f'Left Arm bend angle: {left_arm_bending_form}', [900, 50], #[900, 50] for portait views, [50, 200] for phones

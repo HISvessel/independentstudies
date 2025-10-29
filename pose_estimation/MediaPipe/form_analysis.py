@@ -20,7 +20,7 @@ class FormAnalyzer:
 
         if mag1 == 0 or mag2 == 0:
             return None
-        return math.degrees(math.acos(dot / (mag1*mag2)))
+        return math.degrees(math.asin(dot / (mag1*mag2)))
 
     @staticmethod
     def calculate_angle(p1, p2, p3):
@@ -42,7 +42,7 @@ class FormAnalyzer:
         a = np.array(p1)
         b = np.array(p2)
         c = np.array(p3)
-        radians = np.arctan2(a[1] - b[1], a[0] - b[0]) - np.arctan2(a[1] - c[1], a[0] - c[0])
+        radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b[0])
         angle = np.abs(radians * 180.0/np.pi)
 
         if angle > 180.0:
