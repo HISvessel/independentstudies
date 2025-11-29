@@ -4,14 +4,21 @@ sequenceDiagram
     participant browser
     participant server
 
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/notes/new_note
+    activate server
+    server-->>browser: 302 status, redirect
+    deactivate server
+
+    Note right of browser: As the note is appended to the server, the document is reloaded to show the update
+
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
-    server-->>browser: html document
+    server-->>browser: the HTML file
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
-    server-->>browser: the css file
+    server-->>browser: the CSS file
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
@@ -19,11 +26,10 @@ sequenceDiagram
     server-->>browser: the JavaScript file
     deactivate server
 
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+    Note right of browser: The browser executes the JavaScript file
 
-    browser->>server: GEt https://studies.cs.helsinki.fi/exampleapp/data.json
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2025-11-29" }, ...]
-    deactivate server
+    server-->>browser: [{ "content": "this new note was added today...henlo...", "date": "2025-11-29"}, ...]
 
-    Note right of browser: The browser executes the callback function that renders the notes
+    Note right of browser: The browser renders the new page with the added note to the JSON database
