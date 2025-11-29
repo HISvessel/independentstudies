@@ -1,3 +1,5 @@
+```mermaid
+
 sequenceDieagram
     participant browser
     participant server
